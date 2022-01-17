@@ -1,2 +1,2 @@
-# schema-dart
-Generate dart type definitions from PostgreSQL database schema (WIP)
+A sample command-line application with an entrypoint in `bin/`, library code
+in `lib/`, and example unit test in `test/`.
