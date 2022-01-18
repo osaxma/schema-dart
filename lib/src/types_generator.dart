@@ -14,7 +14,6 @@ class TypesGenerator {
   final TypesGeneratorConfig config;
 
   late final formatter = DartFormatter(pageWidth: 120);
-  
 
   TypesGenerator({
     required this.outputDirectory,
@@ -22,12 +21,11 @@ class TypesGenerator {
     this.config = const TypesGeneratorConfig(),
   });
 
-  Future<void> generate() async {
-    for(final table in tables) {
+  Future<void> addDartSourceToTables() async {
+    for (final table in tables) {
       final builder = DataClassBuilder(config: config, table: table);
       final source = builder.build();
-      print(formatter.format(source));
-      break;
+      table.source = formatter.format(source);
     }
   }
 }

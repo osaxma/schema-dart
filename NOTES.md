@@ -1,6 +1,3 @@
-
-
-
 ## Useful Queries:
 
 - See information about all columns for all tables in every schema:

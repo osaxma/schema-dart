@@ -7,16 +7,12 @@ import 'package:schema_dart/src/version.dart';
 
 import 'logger.dart';
 
-class DartSchemaRunner extends CommandRunner<void> {
-  DartSchemaRunner()
-      : super(
-          'Schema Dart',
-          'Schema Dart - generate dart type definitions from PostgreSQL schema',
-        ) {
+class SchemaDartRunner extends CommandRunner<void> {
+  SchemaDartRunner() : super('schema-dart', '') {
     argParser.addOption(
       'connection-string',
       abbr: 'c',
-      mandatory: true,
+      // mandatory: true,
       help: 'PostgreSQL connection string in the following format:\n'
           'postgresql://<username>:<password>@<host>:<port>/<database-name>',
     );
@@ -24,8 +20,22 @@ class DartSchemaRunner extends CommandRunner<void> {
     argParser.addOption(
       'output-dir',
       abbr: 'o',
-      mandatory: true,
+      // mandatory: true,
       help: 'The output directory for the generated dart files',
+    );
+
+    argParser.addOption(
+      'schema',
+      abbr: 's',
+      defaultsTo: 'public',
+      help: 'specify the schema',
+    );
+
+    argParser.addMultiOption(
+      'tables',
+      abbr: 't',
+      valueHelp: 'String',
+      help: 'provide a specific list of tables to generate data classes for.\n(defaults to all tables)',
     );
 
     argParser.addFlag(
@@ -34,12 +44,31 @@ class DartSchemaRunner extends CommandRunner<void> {
       negatable: false,
       help: 'Enable verbose logging.',
     );
+
     argParser.addFlag(
       'version',
       negatable: false,
       help: 'Print the current version.',
     );
   }
+
+  @override
+  // TODO: implement description
+  String get description => '''Generate Data Classes for PostgreSQL schema
+  
+Examples: 
+
+  # generate data classes for public schema (default)
+  schema-dart -c postgresql://postgres:postgres@localhost:54322/postgres -o path/to/output/directory
+
+  # generate for data classes for a "cms" schema 
+  schema-dart -c <connection-string> -o <output-dir> -s cms
+
+  # generate data classes for specific tables from public schema (format sensitive): 
+  schema-dart -c <connection-string> -o <output-dir> -t "users","posts"
+  # or
+  schema-dart -c <connection-string> -o <output-dir> --schema=api --tables="profiles","posts"
+  ''';
 
   @override
   Future<void> runCommand(ArgResults topLevelResults) async {
@@ -53,6 +82,18 @@ class DartSchemaRunner extends CommandRunner<void> {
       Log.verbose = true;
     }
 
+    if (topLevelResults['help'] != false) {
+      return super.runCommand(topLevelResults);
+    }
+
+    if (topLevelResults['connection-string'] == null) {
+      throw Exception('connection-string is required');
+    }
+
+    // if (topLevelResults['output-dir'] == null) {
+    //   throw Exception('output-dir is required');
+    // }
+
     final connectionString = topLevelResults['connection-string'] as String;
     final outputDirectory = Directory(topLevelResults['output-dir'] as String);
 
@@ -60,7 +101,16 @@ class DartSchemaRunner extends CommandRunner<void> {
     //   throw Exception('The given output directory does not exist: ${outputDirectory.path}');
     // }
 
-    final converter = SchemaConverter(connectionString, outputDirectory);
+    final schema = topLevelResults['schema'];
+
+    final listOfTables = topLevelResults['tables'];
+
+    final converter = SchemaConverter(
+      connectionString: connectionString,
+      outputDirectory: outputDirectory,
+      schemaName: schema,
+      tableNames: listOfTables,
+    );
 
     await converter.convert();
   }

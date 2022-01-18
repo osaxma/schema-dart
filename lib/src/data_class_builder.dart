@@ -42,6 +42,9 @@ class DataClassBuilder {
     if (config.generateCopyWith) {
       buildCopyWithMethod();
     }
+    if (config.generateSerialization) {
+      buildSerialization();
+    }
     if (config.generateEquality) {
       buildEqualityMethods();
       buildHashCodeGetter();
@@ -49,19 +52,16 @@ class DataClassBuilder {
     if (config.generateToString) {
       buildToStringMethod();
     }
-    if (config.generateSerialization) {
-      buildSerialization();
-    }
 
     String source = generateSource();
 
-    if (requiresCollectionImport) {
-      // add convert import to source
+    if (requiresConvertImport) {
+      // add collection import to source
       source = "import '$_dartConvertImportUri';\n" + source;
     }
 
-    if (requiresConvertImport) {
-      // add collection import to source
+    if (requiresCollectionImport) {
+      // add convert import to source
       source = "import '$_collectionImportUri';\n" + source;
     }
 
@@ -199,15 +199,72 @@ class DataClassBuilder {
     classBuilder.methods.add(method);
   }
 
-  void buildSerialization() {}
+  void buildSerialization() {
+    buildToMapMethod();
+    buildFromMapConstructor();
+    buildFromJsonConstructor();
+    buildToJsonMethod();
+  }
 
-  void generateToMapMethod() {
+  void buildToMapMethod() {
     final body = fields.map((field) => field.toMapKeyAndValueString).reduce((value, element) => value + ',' + element);
     final method = Method((b) {
       b
         ..name = 'toMap'
         ..returns = refer('Map<String, dynamic>')
         ..body = Code('return {$body,};');
+    });
+
+    classBuilder.methods.add(method);
+  }
+
+  void buildFromMapConstructor() {
+    final constructorBody =
+        fields.map((p) => p.fromMapArgumentAndAssignmentString).reduce((value, element) => value + ',' + element);
+    // return Code('return ${clazz.name.name}($body,);');
+
+    final constructor = Constructor((b) {
+      b
+        ..name = 'fromMap'
+        ..factory = true
+        ..requiredParameters = ListBuilder<Parameter>([
+          Parameter((b) {
+            b
+              ..name = 'map'
+              ..type = refer('Map<String, dynamic>');
+          })
+        ])
+        ..body = Code('return $className($constructorBody,);');
+    });
+
+    classBuilder.constructors.add(constructor);
+  }
+
+  void buildFromJsonConstructor() {
+    final constructor = Constructor((b) {
+      b
+        ..name = 'fromJson'
+        ..factory = true
+        ..requiredParameters = ListBuilder<Parameter>([
+          Parameter((b) {
+            b
+              ..name = 'source'
+              ..type = refer('String');
+          })
+        ])
+        ..lambda = true
+        ..body = Code('$className.fromMap(json.decode(source))');
+    });
+    classBuilder.constructors.add(constructor);
+  }
+
+  void buildToJsonMethod() {
+    final method = Method((b) {
+      b
+        ..name = 'toJson'
+        ..returns = refer('String')
+        ..lambda = true
+        ..body = Code('json.encode(toMap())');
     });
 
     classBuilder.methods.add(method);
@@ -264,6 +321,7 @@ class _TypeBuilderInput {
 
     for (var column in table.columns) {
       final field = _Field(
+        columnKey: column.columnName,
         name: column.dartName,
         type: column.dartType,
         isNullable: column.isNullable,
@@ -279,6 +337,12 @@ class _TypeBuilderInput {
 }
 
 class _Field {
+  /// The column name as it appears in PostgreSQL
+  ///
+  /// This is used as a key when extracting the data from json.
+  final String columnKey;
+
+  /// The dart name for this field.
   final String name;
   final bool isNullable;
   final String type;
@@ -286,6 +350,7 @@ class _Field {
   final bool useUTC;
 
   _Field({
+    required this.columnKey,
     required this.name,
     required this.isNullable,
     required this.type,
@@ -298,7 +363,7 @@ class _Field {
   bool get isCollection => type.startsWith('List');
 
   String get toMapKeyAndValueString {
-    final key = name;
+    final key = columnKey;
     String value = name;
 
     if (type == 'DateTime') {
@@ -313,7 +378,7 @@ class _Field {
   String get fromMapArgumentAndAssignmentString {
     final arg = name;
     String assignment = name;
-    String mapKey = "map['$name']";
+    String mapKey = "map['$columnKey']";
 
     switch (type.replaceAll('?', '')) {
       case 'num':

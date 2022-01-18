@@ -92,8 +92,9 @@ class TablesReader {
   /// an empty list (default) indicates all tables.
   Future<List<Table>> getTables({
     String schemaName = 'public',
-    List<String> tableNames = const <String>[],
+    List<String>? tableNames,
   }) async {
+    tableNames ??= const <String>[];
     final rawQuery = _buildColumnTypesQuery(tableNames: tableNames, schemaName: schemaName);
 
     Log.trace('executing the following query:\n$rawQuery');

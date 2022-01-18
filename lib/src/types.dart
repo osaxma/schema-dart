@@ -5,6 +5,8 @@ class Table {
   final String tableName;
   final List<ColumnData> columns;
 
+  String source = '';
+
   Table(this.tableName, this.columns);
 
   String get dartClassName => tableName.convertSnakeCaseToCamelCase().toUpperCaseFirst();
