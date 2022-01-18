@@ -1,5 +1,13 @@
-import 'package:schema_dart/schema_dart.dart' as schema_dart;
+import 'dart:io';
 
-void main(List<String> arguments) {
-  print('Hello world: ${schema_dart.calculate()}!');
+import 'package:schema_dart/src/command_runner.dart';
+
+void main(List<String> args) async {
+  try {
+    await DartSchemaRunner().run(args);
+    exitCode = 0;
+  } catch (e) {
+    print(e);
+    exitCode = 1;
+  }
 }
