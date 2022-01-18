@@ -35,7 +35,8 @@ class SchemaDartRunner extends CommandRunner<void> {
       'tables',
       abbr: 't',
       valueHelp: 'String',
-      help: 'provide a specific list of tables to generate data classes for.\n(defaults to all tables)',
+      help: 'provide a specific list of tables to generate data classes for.\n'
+          '(defaults to all tables)',
     );
 
     argParser.addFlag(
