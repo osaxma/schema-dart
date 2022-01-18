@@ -1,5 +1,7 @@
 import 'package:cli_util/cli_logging.dart';
 
+// cli_util logger does not have a singelton. 
+// This was created to avoid passing the logger all over the place especially. 
 class Log {
   static late final Logger _logger = Logger.standard();
   static late final Logger _loggerV = Logger.verbose();

@@ -6,8 +6,9 @@ void main(List<String> args) async {
   try {
     await DartSchemaRunner().run(args);
     exitCode = 0;
-  } catch (e) {
+  } catch (e, s) {
     print(e);
+    print(s);
     exitCode = 1;
   }
 }

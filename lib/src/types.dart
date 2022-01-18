@@ -1,17 +1,31 @@
-import 'dart:convert';
+import 'util.dart';
 
+/// a simple representation of a table
 class Table {
   final String tableName;
   final List<ColumnData> columns;
 
   Table(this.tableName, this.columns);
+
+  String get dartClassName => tableName.convertSnakeCaseToCamelCase().toUpperCaseFirst();
+
+  @override
+  String toString() {
+    return 'Table(tableName: $tableName, columns: ${columns.length})';
+  }
 }
 
+/// a simple representation of a column in a [Table]
 class ColumnData {
   final String tableName;
   final String columnName;
   final String dataType;
   final bool isNullable;
+
+  String get dartType => getDartType(dataType, isNullable);
+
+  String get dartName => columnName.convertSnakeCaseToCamelCase();
+
   ColumnData({
     required this.tableName,
     required this.columnName,
@@ -19,56 +33,18 @@ class ColumnData {
     required this.isNullable,
   });
 
-  Map<String, dynamic> toMap() {
-    return {
-      'tableName': tableName,
-      'columnName': columnName,
-      'dataType': dataType,
-      'isNullable': isNullable,
-    };
-  }
-
-  factory ColumnData.fromMap(Map<String, dynamic> map) {
-    return ColumnData(
-      tableName: map[InfoSchemaColumnNames.tableName],
-      columnName: map[InfoSchemaColumnNames.columnName],
-      dataType: map[InfoSchemaColumnNames.dataType],
-      isNullable: map[InfoSchemaColumnNames.isNullable],
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory ColumnData.fromJson(String source) => ColumnData.fromMap(json.decode(source));
-
   @override
   String toString() {
     return 'ColumnData(tableName: $tableName, columnName: $columnName, dataType: $dataType, isNullable: $isNullable)';
   }
-
-  @override
-  bool operator ==(Object other) {
-    if (identical(this, other)) return true;
-
-    return other is ColumnData &&
-        other.tableName == tableName &&
-        other.columnName == columnName &&
-        other.dataType == dataType &&
-        other.isNullable == isNullable;
-  }
-
-  @override
-  int get hashCode {
-    return tableName.hashCode ^ columnName.hashCode ^ dataType.hashCode ^ isNullable.hashCode;
-  }
 }
 
-/// Returns a String represneting a dart based on a [postgresType]
+/// Returns a String represneting a dart type from a [postgresType]
 /// (i.e. `udt_name` from `information_schema.columns`)
+// TODO: double check the types
+//       The following was based on: https://github.com/SweetIQ/schemats/blob/master/src/schemaPostgres.ts
 String getDartType(String postgresType, bool isNullable) {
   late final String dartType;
-  // TODO: double check the types
-  //       The following was copied and modified from here: https://github.com/SweetIQ/schemats/blob/master/src/schemaPostgres.ts
   switch (postgresType) {
     case 'bpchar':
     case 'char':
@@ -114,7 +90,7 @@ String getDartType(String postgresType, bool isNullable) {
     case '_int2':
     case '_int4':
     case '_int8':
-      dartType = 'List<num>';
+      dartType = 'List<int>';
       break;
     case '_float4':
     case '_float8':

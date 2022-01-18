@@ -1,4 +1,3 @@
-
 import 'package:postgres/postgres.dart';
 
 import 'logger.dart';
@@ -111,6 +110,7 @@ class TablesReader {
       final tableName = result?[InfoSchemaColumnNames.tableName];
       // the query ensures the table names are sorted so we can do this
       if (tables.isEmpty || tableName != tables.last.tableName) {
+        Log.trace('reading table: $tableName');
         tables.add(Table(tableName, <ColumnData>[]));
       }
       // get column data
@@ -118,6 +118,7 @@ class TablesReader {
       final dataType = result?[InfoSchemaColumnNames.dataType];
       final isNullable = result?[InfoSchemaColumnNames.isNullable].toLowerCase() == 'yes' ? true : false;
 
+      Log.trace('   read column: $columnName');
       final columnData = ColumnData(
         tableName: tableName,
         columnName: columnName,

@@ -9,6 +9,8 @@ environment:
 dependencies: 
   args: ^2.3.0
   cli_util: ^0.3.5
+  code_builder: ^4.1.0
+  dart_style: ^2.2.1
   path: ^1.8.1
   postgres: ^2.4.3
 
