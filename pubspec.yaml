@@ -1,7 +1,8 @@
 name: schema_dart
 description: Generate dart type definitions from PostgreSQL database schema.
 homepage: https://github.com/osaxma
-version: 0.0.1+1
+version: 0.0.1+2
+repository: https://github.com/osaxma/schema-dart
 
 environment:
   sdk: '>=2.15.1 <3.0.0'
