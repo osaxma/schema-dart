@@ -1,4 +1,4 @@
-import 'package:built_collection/built_collection.dart'; // for buildng parts as a list (constructors, parameters, etc.)
+import 'package:built_collection/built_collection.dart'; 
 import 'package:code_builder/code_builder.dart';
 import 'package:schema_dart/src/types.dart';
 

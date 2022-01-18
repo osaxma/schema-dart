@@ -1,14 +1,13 @@
 import 'dart:io';
 
-import 'package:schema_dart/src/command_runner.dart';
+import 'package:schema_dart/schema_dart.dart';
 
 void main(List<String> args) async {
   try {
     await SchemaDartRunner().run(args);
     exitCode = 0;
-  } catch (e, s) {
+  } catch (e) {
     print(e);
-    // print(s);
     exitCode = 1;
   }
 }
