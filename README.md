@@ -42,4 +42,4 @@ Within a dart/flutter project directory, you can run one of the following exampl
 
 ## Sample Output:
 
-The following folder: [example/sample_output](/example/sample_output) contains a sample output from Supabase's `auth` schema.
+The following folder: [example/sample_output](https://github.com/osaxma/schema-dart/tree/main/example/sample_output) contains a sample output from Supabase's `auth` schema.

@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:code_builder/code_builder.dart';
 import 'package:dart_style/dart_style.dart';
 
 import 'data_class_builder.dart';

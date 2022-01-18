@@ -1,4 +1,4 @@
-The output was generated for the auth schema of supabase with following command:
+The [sample output](https://github.com/osaxma/schema-dart/tree/main/example/sample_output) was generated for the auth schema of supabase with following command:
 
 - From the project root directory, run:
 ```
