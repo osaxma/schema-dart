@@ -129,4 +129,11 @@ class InfoSchemaColumnNames {
   static const columnName = 'column_name';
   static const dataType = 'udt_name'; // do not use `data_type` (see: NOTES.md)
   static const isNullable = 'is_nullable';
+
+  static const all = [
+    tableName,
+    columnName,
+    dataType,
+    isNullable,
+  ];
 }
