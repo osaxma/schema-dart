@@ -1,10 +1,10 @@
 # schema-dart
-Generate dart type definitions from PostgreSQL database schema (WIP)
+Generate dart type definitions from PostgreSQL database schema (MVP)
 
 
 ## Installation:
 
-Until the package is published to `pub.dev`, it can be installed as follow:
+The package can be installed as follow:
 
 ```
 [~] dart pub global activate schema_dart

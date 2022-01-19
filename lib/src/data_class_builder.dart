@@ -403,6 +403,8 @@ class _Field {
     }
 
     if (isCollection) {
+      // TODO: account for List<DateTime> since it's a List<String> 
+      //       unlike List<int>, List<double>, etc. which comes in the same type
       assignment = isNullable ? '$mapKey == null ? null : $type.from($mapKey)' : '$type.from($mapKey)';
     }
 
