@@ -1,4 +1,4 @@
-import 'package:built_collection/built_collection.dart'; 
+import 'package:built_collection/built_collection.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:schema_dart/src/types.dart';
 
@@ -398,7 +398,7 @@ class _Field {
         assignment = isNullable ? 'double.tryParse($mapKey)' : 'double.parse($mapKey)';
         break;
       case 'DateTime':
-        assignment = isNullable ? 'DateTime.tryParse($mapKey)' : 'DateTime.parse($mapKey)';
+        assignment = isNullable ? 'DateTime.tryParse($mapKey.toString())' : 'DateTime.parse($mapKey)';
         break;
     }
 
