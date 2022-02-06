@@ -140,11 +140,55 @@ String _buildColumnTypesQuery({
   required String schemaName,
   required List<String> tableNames,
 }) {
-  String rawQuery = ''' 
-    SELECT table_name, column_name, udt_name, is_nullable
-    FROM information_schema.columns
-    WHERE table_schema = '$schemaName'
-    ''';
+  String rawQuery = '''
+      WITH types AS (
+          SELECT n.nspname,
+                 pg_catalog.format_type ( t.oid, NULL ) AS table_name
+          FROM pg_catalog.pg_type t
+                   JOIN pg_catalog.pg_namespace n
+                        ON n.oid = t.typnamespace
+          WHERE ( t.typrelid = 0
+              OR ( SELECT c.relkind = 'c'
+                   FROM pg_catalog.pg_class c
+                   WHERE c.oid = t.typrelid ) )
+            AND NOT EXISTS (
+                  SELECT 1
+                  FROM pg_catalog.pg_type el
+                  WHERE el.oid = t.typelem
+                    AND el.typarray = t.oid )
+            AND n.nspname = '$schemaName'
+      ),
+           cols AS (
+               SELECT pg_catalog.format_type ( t.oid, NULL ) AS table_name,
+                      a.attname::text AS column_name,
+                      pg_catalog.format_type ( a.atttypid, a.atttypmod ) AS udt_name,
+                      CASE
+                          WHEN a.attnotnull = true THEN 'NO'
+                          WHEN a.attnotnull = false THEN 'YES'
+                      END AS is_nullable
+               FROM pg_catalog.pg_attribute a
+                        JOIN pg_catalog.pg_type t
+                             ON a.attrelid = t.typrelid
+                        JOIN pg_catalog.pg_namespace n
+                             ON ( n.oid = t.typnamespace )
+                        JOIN types
+                             ON ( types.nspname = n.nspname
+                                 AND types.table_name = pg_catalog.format_type ( t.oid, NULL ) )
+               WHERE a.attnum > 0
+                 AND NOT a.attisdropped
+           )
+      SELECT cols.table_name,
+             cols.column_name,
+             cols.udt_name,
+             cols.is_nullable
+      FROM cols
+      
+      UNION ALL
+      
+      SELECT table_name, column_name, udt_name, is_nullable
+      FROM information_schema.columns
+      WHERE table_schema = '$schemaName'
+  ''';
 
   if (tableNames.length == 1) {
     rawQuery = rawQuery + "AND table_name = '${tableNames[0]}'";
