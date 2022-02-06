@@ -159,12 +159,15 @@ String _buildColumnTypesQuery({
             and n.nspname = '$schemaName'
       ),
            cols as (
-               select pg_catalog.format_type ( t.oid, null ) as table_name,
+               select case
+                          when position('.' in pg_catalog.format_type(t.oid, null)) > 0
+                              then split_part(pg_catalog.format_type(t.oid, null), '.', 2)
+                          else pg_catalog.format_type(t.oid, null) end as table_name,
                       a.attname::text as column_name,
                       (select typname from pg_catalog.pg_type where oid = a.atttypid) as udt_name,
                       case
                           when a.attnotnull = true then 'NO'
-                          when a.attnotnull = false then 'YES'
+                          else 'YES'
                           end as is_nullable
                from pg_catalog.pg_attribute a
                         join pg_catalog.pg_type t
