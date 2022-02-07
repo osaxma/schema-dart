@@ -65,6 +65,8 @@ class DataClassBuilder {
       source = "import '$_collectionImportUri';\n" + source;
     }
 
+    print(source);
+
     return source;
   }
 
@@ -403,7 +405,9 @@ class _Field {
     }
 
     if (isCollection) {
-      assignment = isNullable ? '$mapKey == null ? null : $type.from($mapKey)' : '$type.from($mapKey)';
+      print("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx " +
+          '$mapKey == null ? null : $type.from($mapKey)');
+      assignment = isNullable ? '$mapKey == null ? null : ${type.replaceAll('?', '')}.from($mapKey)' : '$type.from($mapKey)';
     }
 
     return '$arg: $assignment';
