@@ -390,12 +390,12 @@ class _Field {
         break;
       case 'int':
         // - int --> map['fieldName']?.toInt()       OR     int.parse(map['fieldName'])
-        assignment = isNullable ? 'int.tryParse($mapKey)' : 'int.parse($mapKey)';
+        assignment = isNullable ? 'int.tryParse($mapKey.toString())' : 'int.parse($mapKey)';
         break;
       case 'double':
         // - double --> map['fieldName']?.double()   OR     double.parse(map['fieldName'])
         // note: dart, especially when used with web, would convert double to integer (1.0 -> 1) so account for it.
-        assignment = isNullable ? 'double.tryParse($mapKey)' : 'double.parse($mapKey)';
+        assignment = isNullable ? 'double.tryParse($mapKey.toString())' : 'double.parse($mapKey)';
         break;
       case 'DateTime':
         assignment = isNullable ? 'DateTime.tryParse($mapKey.toString())' : 'DateTime.parse($mapKey)';
