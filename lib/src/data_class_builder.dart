@@ -203,6 +203,7 @@ class DataClassBuilder {
     buildToMapMethod();
     buildFromMapConstructor();
     buildFromJsonConstructor();
+    buildFromJsonToListStaticMethod();
     buildToJsonMethod();
   }
 
@@ -256,6 +257,32 @@ class DataClassBuilder {
         ..body = Code('$className.fromMap(json.decode(source))');
     });
     classBuilder.constructors.add(constructor);
+  }
+
+  void buildFromJsonToListStaticMethod() {
+    final method = Method((b) {
+      b
+        ..static = true
+        ..name = 'fromJsonToList'
+        ..lambda = false
+        ..requiredParameters = ListBuilder<Parameter>([
+          Parameter((b) {
+            b
+              ..name = 'source'
+              ..type = refer('dynamic');
+          })
+        ])
+        ..body = Code('''
+          if (source != null) {
+            return (source as List).map((e) => $className.fromJson(json.encode(e))).toList();
+          } else {
+            return null;
+          }
+          ''')
+        ..returns = refer('List<$className>?');
+    });
+
+    classBuilder.methods.add(method);
   }
 
   void buildToJsonMethod() {
