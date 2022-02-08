@@ -2,32 +2,32 @@ import 'dart:convert';
 
 class Identities {
   const Identities({
-    required this.provider,
-    required this.identityData,
+    this.updatedAt,
+    required this.userId,
     this.lastSignInAt,
     required this.id,
     this.createdAt,
-    this.updatedAt,
-    required this.userId,
+    required this.identityData,
+    required this.provider,
   });
 
   factory Identities.fromMap(Map<String, dynamic> map) {
     return Identities(
-      provider: map['provider'],
-      identityData: map['identity_data'],
-      lastSignInAt: DateTime.tryParse(map['last_sign_in_at']),
-      id: map['id'],
-      createdAt: DateTime.tryParse(map['created_at']),
-      updatedAt: DateTime.tryParse(map['updated_at']),
+      updatedAt: DateTime.tryParse(map['updated_at'] ?? ""),
       userId: map['user_id'],
+      lastSignInAt: DateTime.tryParse(map['last_sign_in_at'] ?? ""),
+      id: map['id'],
+      createdAt: DateTime.tryParse(map['created_at'] ?? ""),
+      identityData: map['identity_data'],
+      provider: map['provider'],
     );
   }
 
   factory Identities.fromJson(String source) => Identities.fromMap(json.decode(source));
 
-  final String provider;
+  final DateTime? updatedAt;
 
-  final Object identityData;
+  final String userId;
 
   final DateTime? lastSignInAt;
 
@@ -35,39 +35,39 @@ class Identities {
 
   final DateTime? createdAt;
 
-  final DateTime? updatedAt;
+  final Object identityData;
 
-  final String userId;
+  final String provider;
 
   Identities copyWith({
-    String? provider,
-    Object? identityData,
+    DateTime? updatedAt,
+    String? userId,
     DateTime? lastSignInAt,
     String? id,
     DateTime? createdAt,
-    DateTime? updatedAt,
-    String? userId,
+    Object? identityData,
+    String? provider,
   }) {
     return Identities(
-      provider: provider ?? this.provider,
-      identityData: identityData ?? this.identityData,
+      updatedAt: updatedAt ?? this.updatedAt,
+      userId: userId ?? this.userId,
       lastSignInAt: lastSignInAt ?? this.lastSignInAt,
       id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      userId: userId ?? this.userId,
+      identityData: identityData ?? this.identityData,
+      provider: provider ?? this.provider,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'provider': provider,
-      'identity_data': identityData,
+      'updated_at': updatedAt,
+      'user_id': userId,
       'last_sign_in_at': lastSignInAt,
       'id': id,
       'created_at': createdAt,
-      'updated_at': updatedAt,
-      'user_id': userId,
+      'identity_data': identityData,
+      'provider': provider,
     };
   }
 
@@ -77,28 +77,28 @@ class Identities {
     if (identical(this, other)) return true;
 
     return other is Identities &&
-        other.provider == provider &&
-        other.identityData == identityData &&
+        other.updatedAt == updatedAt &&
+        other.userId == userId &&
         other.lastSignInAt == lastSignInAt &&
         other.id == id &&
         other.createdAt == createdAt &&
-        other.updatedAt == updatedAt &&
-        other.userId == userId;
+        other.identityData == identityData &&
+        other.provider == provider;
   }
 
   @override
   int get hashCode {
-    return provider.hashCode ^
-        identityData.hashCode ^
+    return updatedAt.hashCode ^
+        userId.hashCode ^
         lastSignInAt.hashCode ^
         id.hashCode ^
         createdAt.hashCode ^
-        updatedAt.hashCode ^
-        userId.hashCode;
+        identityData.hashCode ^
+        provider.hashCode;
   }
 
   @override
   String toString() {
-    return 'Identities(provider: $provider, identityData: $identityData, lastSignInAt: $lastSignInAt, id: $id, createdAt: $createdAt, updatedAt: $updatedAt, userId: $userId)';
+    return 'Identities(updatedAt: $updatedAt, userId: $userId, lastSignInAt: $lastSignInAt, id: $id, createdAt: $createdAt, identityData: $identityData, provider: $provider)';
   }
 }

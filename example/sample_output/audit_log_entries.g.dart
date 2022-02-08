@@ -2,51 +2,51 @@ import 'dart:convert';
 
 class AuditLogEntries {
   const AuditLogEntries({
-    this.payload,
-    this.instanceId,
     this.createdAt,
     required this.id,
+    this.instanceId,
+    this.payload,
   });
 
   factory AuditLogEntries.fromMap(Map<String, dynamic> map) {
     return AuditLogEntries(
-      payload: map['payload'],
-      instanceId: map['instance_id'],
-      createdAt: DateTime.tryParse(map['created_at']),
+      createdAt: DateTime.tryParse(map['created_at'] ?? ""),
       id: map['id'],
+      instanceId: map['instance_id'],
+      payload: map['payload'],
     );
   }
 
   factory AuditLogEntries.fromJson(String source) => AuditLogEntries.fromMap(json.decode(source));
 
-  final Object? payload;
-
-  final String? instanceId;
-
   final DateTime? createdAt;
 
   final String id;
 
+  final String? instanceId;
+
+  final Object? payload;
+
   AuditLogEntries copyWith({
-    Object? payload,
-    String? instanceId,
     DateTime? createdAt,
     String? id,
+    String? instanceId,
+    Object? payload,
   }) {
     return AuditLogEntries(
-      payload: payload ?? this.payload,
-      instanceId: instanceId ?? this.instanceId,
       createdAt: createdAt ?? this.createdAt,
       id: id ?? this.id,
+      instanceId: instanceId ?? this.instanceId,
+      payload: payload ?? this.payload,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'payload': payload,
-      'instance_id': instanceId,
       'created_at': createdAt,
       'id': id,
+      'instance_id': instanceId,
+      'payload': payload,
     };
   }
 
@@ -56,19 +56,19 @@ class AuditLogEntries {
     if (identical(this, other)) return true;
 
     return other is AuditLogEntries &&
-        other.payload == payload &&
-        other.instanceId == instanceId &&
         other.createdAt == createdAt &&
-        other.id == id;
+        other.id == id &&
+        other.instanceId == instanceId &&
+        other.payload == payload;
   }
 
   @override
   int get hashCode {
-    return payload.hashCode ^ instanceId.hashCode ^ createdAt.hashCode ^ id.hashCode;
+    return createdAt.hashCode ^ id.hashCode ^ instanceId.hashCode ^ payload.hashCode;
   }
 
   @override
   String toString() {
-    return 'AuditLogEntries(payload: $payload, instanceId: $instanceId, createdAt: $createdAt, id: $id)';
+    return 'AuditLogEntries(createdAt: $createdAt, id: $id, instanceId: $instanceId, payload: $payload)';
   }
 }
