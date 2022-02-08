@@ -2,57 +2,57 @@ import 'dart:convert';
 
 class Instances {
   const Instances({
-    this.updatedAt,
-    required this.id,
     this.uuid,
+    this.updatedAt,
     this.rawBaseConfig,
+    required this.id,
     this.createdAt,
   });
 
   factory Instances.fromMap(Map<String, dynamic> map) {
     return Instances(
-      updatedAt: DateTime.tryParse(map['updated_at']),
-      id: map['id'],
       uuid: map['uuid'],
+      updatedAt: DateTime.tryParse(map['updated_at'] ?? ""),
       rawBaseConfig: map['raw_base_config'],
-      createdAt: DateTime.tryParse(map['created_at']),
+      id: map['id'],
+      createdAt: DateTime.tryParse(map['created_at'] ?? ""),
     );
   }
 
   factory Instances.fromJson(String source) => Instances.fromMap(json.decode(source));
 
-  final DateTime? updatedAt;
-
-  final String id;
-
   final String? uuid;
 
+  final DateTime? updatedAt;
+
   final String? rawBaseConfig;
+
+  final String id;
 
   final DateTime? createdAt;
 
   Instances copyWith({
-    DateTime? updatedAt,
-    String? id,
     String? uuid,
+    DateTime? updatedAt,
     String? rawBaseConfig,
+    String? id,
     DateTime? createdAt,
   }) {
     return Instances(
-      updatedAt: updatedAt ?? this.updatedAt,
-      id: id ?? this.id,
       uuid: uuid ?? this.uuid,
+      updatedAt: updatedAt ?? this.updatedAt,
       rawBaseConfig: rawBaseConfig ?? this.rawBaseConfig,
+      id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'updated_at': updatedAt,
-      'id': id,
       'uuid': uuid,
+      'updated_at': updatedAt,
       'raw_base_config': rawBaseConfig,
+      'id': id,
       'created_at': createdAt,
     };
   }
@@ -63,20 +63,20 @@ class Instances {
     if (identical(this, other)) return true;
 
     return other is Instances &&
-        other.updatedAt == updatedAt &&
-        other.id == id &&
         other.uuid == uuid &&
+        other.updatedAt == updatedAt &&
         other.rawBaseConfig == rawBaseConfig &&
+        other.id == id &&
         other.createdAt == createdAt;
   }
 
   @override
   int get hashCode {
-    return updatedAt.hashCode ^ id.hashCode ^ uuid.hashCode ^ rawBaseConfig.hashCode ^ createdAt.hashCode;
+    return uuid.hashCode ^ updatedAt.hashCode ^ rawBaseConfig.hashCode ^ id.hashCode ^ createdAt.hashCode;
   }
 
   @override
   String toString() {
-    return 'Instances(updatedAt: $updatedAt, id: $id, uuid: $uuid, rawBaseConfig: $rawBaseConfig, createdAt: $createdAt)';
+    return 'Instances(uuid: $uuid, updatedAt: $updatedAt, rawBaseConfig: $rawBaseConfig, id: $id, createdAt: $createdAt)';
   }
 }
