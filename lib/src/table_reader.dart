@@ -193,13 +193,13 @@ from (select table_name, column_name, udt_name, is_nullable
       from information_schema.columns
       where table_schema = '$schemaName'
 
-      ORDER BY table_name, ordinal_position asc ) as tables;
+      order BY table_name, ordinal_position asc ) as tables;
   ''';
 
   if (tableNames.length == 1) {
-    rawQuery = rawQuery + "AND table_name = '${tableNames[0]}'";
+    rawQuery = rawQuery + "and table_name = '${tableNames[0]}'";
   } else if (tableNames.length > 1) {
-    rawQuery = rawQuery + 'AND table_name in (' + tableNames.reduce((t1, t2) => "'$t1', '$t2'") + ')';
+    rawQuery = rawQuery + 'and table_name in (' + tableNames.reduce((t1, t2) => "'$t1', '$t2'") + ')';
   }
 
   return rawQuery;
