@@ -269,7 +269,7 @@ class DataClassBuilder {
           Parameter((b) {
             b
               ..name = 'source'
-              ..type = refer('dynamic');
+              ..type = refer('Object?');
           })
         ])
         ..body = Code('''
