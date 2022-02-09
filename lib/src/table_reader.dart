@@ -188,9 +188,12 @@ String _buildColumnTypesQuery({
       
       union all
       
-      select table_name, column_name, udt_name, is_nullable
+      select *
+from (select table_name, column_name, udt_name, is_nullable
       from information_schema.columns
       where table_schema = '$schemaName'
+
+      ORDER BY table_name, ordinal_position asc ) as tables;
   ''';
 
   if (tableNames.length == 1) {
@@ -199,7 +202,7 @@ String _buildColumnTypesQuery({
     rawQuery = rawQuery + 'AND table_name in (' + tableNames.reduce((t1, t2) => "'$t1', '$t2'") + ')';
   }
 
-  rawQuery = rawQuery + 'ORDER BY table_name ASC;';
+  // rawQuery = rawQuery + 'ORDER BY table_name ASC;';
 
   return rawQuery;
 }
