@@ -118,7 +118,6 @@ String getDartType(String postgresType, bool isNullable) {
       dartType = 'List<DateTime>';
       break;
     default:
-      // isNullable = true; // since we don't know
       dartType = 'Object'; // or dynamic?
   }
   return dartType + (isNullable ? '?' : '');
