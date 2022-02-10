@@ -34,21 +34,23 @@ class TypesGeneratorConfig {
   final bool generateSerialization;
   final bool generateEquality;
   final bool generateToString;
+  final bool generateListBuilder;
 
   const TypesGeneratorConfig({
     this.generateCopyWith = true,
     this.generateSerialization = true,
     this.generateEquality = true,
     this.generateToString = true,
+    this.generateListBuilder = true,
   });
 }
 
 class ClassOnlyConfig extends TypesGeneratorConfig {
   const ClassOnlyConfig()
       : super(
-          generateCopyWith: false,
-          generateEquality: false,
-          generateSerialization: false,
-          generateToString: false,
-        );
+            generateCopyWith: false,
+            generateEquality: false,
+            generateSerialization: false,
+            generateToString: false,
+            generateListBuilder: false);
 }

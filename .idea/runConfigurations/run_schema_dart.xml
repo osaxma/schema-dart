@@ -1,6 +1,6 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="run schema_dart" type="DartCommandLineRunConfigurationType" factoryName="Dart Command Line Application">
-    <option name="arguments" value=" -c postgresql://postgres:Caag2cee3viaw0vi6jioriezeZazaife@localhost:5432/postgres -o . -s public" />
+    <option name="arguments" value=" -c postgresql://postgres:Caag2cee3viaw0vi6jioriezeZazaife@localhost:5432/postgres -o . -s public " />
     <option name="filePath" value="$PROJECT_DIR$/bin/schema_dart.dart" />
     <option name="workingDirectory" value="$PROJECT_DIR$/test/" />
     <method v="2" />

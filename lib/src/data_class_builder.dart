@@ -65,6 +65,10 @@ class DataClassBuilder {
       source = "import '$_collectionImportUri';\n" + source;
     }
 
+    if (config.generateListBuilder) {
+      source = source + generateListBuilderMethod();
+    }
+
     return source;
   }
 
@@ -203,7 +207,6 @@ class DataClassBuilder {
     buildToMapMethod();
     buildFromMapConstructor();
     buildFromJsonConstructor();
-    buildFromJsonToListStaticMethod();
     buildToJsonMethod();
   }
 
@@ -259,30 +262,40 @@ class DataClassBuilder {
     classBuilder.constructors.add(constructor);
   }
 
-  void buildFromJsonToListStaticMethod() {
-    final method = Method((b) {
-      b
-        ..static = true
-        ..name = 'fromJsonToList'
-        ..lambda = false
-        ..requiredParameters = ListBuilder<Parameter>([
-          Parameter((b) {
-            b
-              ..name = 'source'
-              ..type = refer('Object?');
-          })
-        ])
-        ..body = Code('''
-          if (source != null) {
-            return (source as List).map((e) => $className.fromJson(json.encode(e))).toList();
-          } else {
-            return null;
-          }
-          ''')
-        ..returns = refer('List<$className>?');
-    });
+  String generateListBuilderMethod() {
+    return '''
+    List<$className>? ${className}s(Object? data) {
+      if (data != null) {
+        return (data as List).map((e) => $className.fromJson(json.encode(e))).toList();
+      } else {
+        return null;
+      }
+    }
+    ''';
 
-    classBuilder.methods.add(method);
+    // final method = Method((b) {
+    //   b
+    //     ..static = true
+    //     ..name = 'fromJsonToList'
+    //     ..lambda = false
+    //     ..requiredParameters = ListBuilder<Parameter>([
+    //       Parameter((b) {
+    //         b
+    //           ..name = 'source'
+    //           ..type = refer('Object?');
+    //       })
+    //     ])
+    //     ..body = Code('''
+    //       if (source != null) {
+    //         return (source as List).map((e) => $className.fromJson(json.encode(e))).toList();
+    //       } else {
+    //         return null;
+    //       }
+    //       ''')
+    //     ..returns = refer('List<$className>?');
+    // });
+    //
+    // classBuilder.methods.add(method);
   }
 
   void buildToJsonMethod() {
@@ -397,7 +410,7 @@ class _Field {
       if (useUTC) {
         value = value + '.toUtc()';
       }
-      value = value + '.toIso8601String()';
+      // value = value + '.toIso8601String()';
     } else if (type == 'DateTime?') {
       if (useUTC) {
         value = value + '?.toUtc()';
