@@ -1,8 +1,10 @@
 import 'package:built_collection/built_collection.dart';
 import 'package:code_builder/code_builder.dart';
+import 'package:inflection3/inflection3.dart';
 import 'package:schema_dart/src/types.dart';
 
 import 'types_generator.dart';
+import 'util.dart';
 
 class DataClassBuilder {
   final Table table;
@@ -264,7 +266,7 @@ class DataClassBuilder {
 
   String generateListBuilderMethod() {
     return '''
-    List<$className>? ${className}s(Object? data) {
+    List<$className>? ${pluralize(className.toLowerCaseFirst())}(Object? data) {
       if (data != null) {
         return (data as List).map((e) => $className.fromJson(json.encode(e))).toList();
       } else {
