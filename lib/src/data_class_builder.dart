@@ -265,39 +265,7 @@ class DataClassBuilder {
   }
 
   String generateListBuilderMethod() {
-    return '''
-    List<$className>? ${pluralize(className.toLowerCaseFirst())}(Object? data) {
-      if (data != null) {
-        return (data as List).map((e) => $className.fromJson(json.encode(e))).toList();
-      } else {
-        return null;
-      }
-    }
-    ''';
-
-    // final method = Method((b) {
-    //   b
-    //     ..static = true
-    //     ..name = 'fromJsonToList'
-    //     ..lambda = false
-    //     ..requiredParameters = ListBuilder<Parameter>([
-    //       Parameter((b) {
-    //         b
-    //           ..name = 'source'
-    //           ..type = refer('Object?');
-    //       })
-    //     ])
-    //     ..body = Code('''
-    //       if (source != null) {
-    //         return (source as List).map((e) => $className.fromJson(json.encode(e))).toList();
-    //       } else {
-    //         return null;
-    //       }
-    //       ''')
-    //     ..returns = refer('List<$className>?');
-    // });
-    //
-    // classBuilder.methods.add(method);
+    return 'List<$className>? ${pluralize(className.toLowerCaseFirst())}(dynamic data) => (data as List?)?.map((e) => $className.fromJson(json.encode(e))).toList();';
   }
 
   void buildToJsonMethod() {
