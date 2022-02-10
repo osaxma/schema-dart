@@ -17,7 +17,7 @@ class AuditLogEntries {
     );
   }
 
-  factory AuditLogEntries.fromJson(String source) => AuditLogEntries.fromMap(json.decode(source));
+  factory AuditLogEntries.fromJson(String source) => AuditLogEntries.fromMap(jsonDecode(source));
 
   final DateTime? createdAt;
 
@@ -50,7 +50,7 @@ class AuditLogEntries {
     };
   }
 
-  String toJson() => json.encode(toMap());
+  String toJson() => jsonEncode(toMap());
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;

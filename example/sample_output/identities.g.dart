@@ -23,7 +23,7 @@ class Identities {
     );
   }
 
-  factory Identities.fromJson(String source) => Identities.fromMap(json.decode(source));
+  factory Identities.fromJson(String source) => Identities.fromMap(jsonDecode(source));
 
   final DateTime? updatedAt;
 
@@ -71,7 +71,7 @@ class Identities {
     };
   }
 
-  String toJson() => json.encode(toMap());
+  String toJson() => jsonEncode(toMap());
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;

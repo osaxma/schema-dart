@@ -19,7 +19,7 @@ class Instances {
     );
   }
 
-  factory Instances.fromJson(String source) => Instances.fromMap(json.decode(source));
+  factory Instances.fromJson(String source) => Instances.fromMap(jsonDecode(source));
 
   final String? uuid;
 
@@ -57,7 +57,7 @@ class Instances {
     };
   }
 
-  String toJson() => json.encode(toMap());
+  String toJson() => jsonEncode(toMap());
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;

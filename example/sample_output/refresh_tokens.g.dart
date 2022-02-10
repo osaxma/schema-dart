@@ -25,7 +25,7 @@ class RefreshTokens {
     );
   }
 
-  factory RefreshTokens.fromJson(String source) => RefreshTokens.fromMap(json.decode(source));
+  factory RefreshTokens.fromJson(String source) => RefreshTokens.fromMap(jsonDecode(source));
 
   final bool? revoked;
 
@@ -78,7 +78,7 @@ class RefreshTokens {
     };
   }
 
-  String toJson() => json.encode(toMap());
+  String toJson() => jsonEncode(toMap());
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;

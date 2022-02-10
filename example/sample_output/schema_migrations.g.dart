@@ -11,7 +11,7 @@ class SchemaMigrations {
     );
   }
 
-  factory SchemaMigrations.fromJson(String source) => SchemaMigrations.fromMap(json.decode(source));
+  factory SchemaMigrations.fromJson(String source) => SchemaMigrations.fromMap(jsonDecode(source));
 
   final String version;
 
@@ -29,7 +29,7 @@ class SchemaMigrations {
     };
   }
 
-  String toJson() => json.encode(toMap());
+  String toJson() => jsonEncode(toMap());
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
