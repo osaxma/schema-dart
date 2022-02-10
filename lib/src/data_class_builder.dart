@@ -277,7 +277,6 @@ class DataClassBuilder {
             return (source as List).map((e) => $className.fromJson(json.encode(e))).toList();
           } else {
             return null;
-            
           }
           ''')
         ..returns = refer('List<$className>?');
@@ -397,6 +396,11 @@ class _Field {
     if (type == 'DateTime') {
       if (useUTC) {
         value = value + '.toUtc()';
+      }
+      value = value + '.toIso8601String()';
+    } else if (type == 'DateTime?') {
+      if (useUTC) {
+        value = value + '?.toUtc()';
       }
       value = value + '.toIso8601String()';
     }
