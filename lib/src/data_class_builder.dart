@@ -254,7 +254,7 @@ class DataClassBuilder {
           })
         ])
         ..lambda = true
-        ..body = Code('$className.fromMap(jsonDecode(source))');
+        ..body = Code('$className.fromMap(json.decode(source))');
     });
     classBuilder.constructors.add(constructor);
   }
@@ -274,9 +274,10 @@ class DataClassBuilder {
         ])
         ..body = Code('''
           if (source != null) {
-            return (source as List).map((e) => $className.fromJson(jsonEncode(e))).toList();
+            return (source as List).map((e) => $className.fromJson(json.encode(e))).toList();
           } else {
             return null;
+            
           }
           ''')
         ..returns = refer('List<$className>?');
@@ -291,7 +292,7 @@ class DataClassBuilder {
         ..name = 'toJson'
         ..returns = refer('String')
         ..lambda = true
-        ..body = Code('jsonEncode(toMap())');
+        ..body = Code('json.encode(toMap())');
     });
 
     classBuilder.methods.add(method);

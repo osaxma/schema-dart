@@ -67,7 +67,7 @@ class Users {
     );
   }
 
-  factory Users.fromJson(String source) => Users.fromMap(jsonDecode(source));
+  factory Users.fromJson(String source) => Users.fromMap(json.decode(source));
 
   final DateTime? lastSignInAt;
 
@@ -225,7 +225,7 @@ class Users {
     };
   }
 
-  String toJson() => jsonEncode(toMap());
+  String toJson() => json.encode(toMap());
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
