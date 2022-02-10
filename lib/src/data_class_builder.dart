@@ -1,8 +1,10 @@
-import 'package:built_collection/built_collection.dart'; 
+import 'package:built_collection/built_collection.dart';
 import 'package:code_builder/code_builder.dart';
+import 'package:inflection3/inflection3.dart';
 import 'package:schema_dart/src/types.dart';
 
 import 'types_generator.dart';
+import 'util.dart';
 
 class DataClassBuilder {
   final Table table;
@@ -63,6 +65,10 @@ class DataClassBuilder {
     if (requiresCollectionImport) {
       // add convert import to source
       source = "import '$_collectionImportUri';\n" + source;
+    }
+
+    if (config.generateListBuilder) {
+      source = source + generateListBuilderMethod();
     }
 
     return source;
@@ -258,6 +264,10 @@ class DataClassBuilder {
     classBuilder.constructors.add(constructor);
   }
 
+  String generateListBuilderMethod() {
+    return 'List<$className>? ${pluralize(className.toLowerCaseFirst())}(dynamic data) => (data as List?)?.map((e) => $className.fromJson(json.encode(e))).toList();';
+  }
+
   void buildToJsonMethod() {
     final method = Method((b) {
       b
@@ -370,6 +380,11 @@ class _Field {
       if (useUTC) {
         value = value + '.toUtc()';
       }
+      // value = value + '.toIso8601String()';
+    } else if (type == 'DateTime?') {
+      if (useUTC) {
+        value = value + '?.toUtc()';
+      }
       value = value + '.toIso8601String()';
     }
     return "'$key':$value";
@@ -390,20 +405,20 @@ class _Field {
         break;
       case 'int':
         // - int --> map['fieldName']?.toInt()       OR     int.parse(map['fieldName'])
-        assignment = isNullable ? 'int.tryParse($mapKey ?? "")' : 'int.parse($mapKey)';
+        assignment = isNullable ? 'int.tryParse($mapKey.toString())' : 'int.parse($mapKey)';
         break;
       case 'double':
         // - double --> map['fieldName']?.double()   OR     double.parse(map['fieldName'])
         // note: dart, especially when used with web, would convert double to integer (1.0 -> 1) so account for it.
-        assignment = isNullable ? 'double.tryParse($mapKey ?? "")' : 'double.parse($mapKey)';
+        assignment = isNullable ? 'double.tryParse($mapKey.toString())' : 'double.parse($mapKey)';
         break;
       case 'DateTime':
-        assignment = isNullable ? 'DateTime.tryParse($mapKey ?? "")' : 'DateTime.parse($mapKey)';
+        assignment = isNullable ? 'DateTime.tryParse($mapKey.toString())' : 'DateTime.parse($mapKey)';
         break;
     }
 
     if (isCollection) {
-      assignment = isNullable ? '$mapKey == null ? null : $type.from($mapKey)' : '$type.from($mapKey)';
+      assignment = isNullable ? '$mapKey == null ? null : ${type.replaceAll('?', '')}.from($mapKey)' : '$type.from($mapKey)';
     }
 
     return '$arg: $assignment';

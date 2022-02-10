@@ -1,9 +1,9 @@
 import 'dart:io';
 
+import 'package:path/path.dart' as p;
 import 'package:schema_dart/src/logger.dart';
 import 'package:schema_dart/src/table_reader.dart';
 import 'package:schema_dart/src/types_generator.dart';
-import 'package:path/path.dart' as p;
 
 import 'types.dart';
 
@@ -14,7 +14,7 @@ class SchemaConverter {
   /// the schema to generate data classes from
   final String schemaName;
 
-  /// an optional list of tables to generate the data classes fromƒ
+  /// an optional list of tables to generate the data classes from
   final List<String>? tableNames;
 
   final _tables = <Table>[];

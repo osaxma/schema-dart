@@ -140,19 +140,67 @@ String _buildColumnTypesQuery({
   required String schemaName,
   required List<String> tableNames,
 }) {
-  String rawQuery = ''' 
-    SELECT table_name, column_name, udt_name, is_nullable
-    FROM information_schema.columns
-    WHERE table_schema = '$schemaName'
-    ''';
+  String rawQuery = '''
+      with types as (
+          select n.nspname,
+                 pg_catalog.format_type ( t.oid, null ) as table_name
+          from pg_catalog.pg_type t
+                   join pg_catalog.pg_namespace n
+                        on n.oid = t.typnamespace
+          where ( t.typrelid = 0
+              or ( select c.relkind = 'c'
+                   from pg_catalog.pg_class c
+                   where c.oid = t.typrelid ) )
+            and not exists (
+                  select 1
+                  from pg_catalog.pg_type el
+                  where el.oid = t.typelem
+                    and el.typarray = t.oid )
+            and n.nspname = '$schemaName'
+      ),
+           cols as (
+               select case
+                          when position('.' in pg_catalog.format_type(t.oid, null)) > 0
+                              then split_part(pg_catalog.format_type(t.oid, null), '.', 2)
+                          else pg_catalog.format_type(t.oid, null) end as table_name,
+                      a.attname::text as column_name,
+                      (select typname from pg_catalog.pg_type where oid = a.atttypid) as udt_name,
+                      case
+                          when a.attnotnull = true then 'NO'
+                          else 'YES'
+                          end as is_nullable
+               from pg_catalog.pg_attribute a
+                        join pg_catalog.pg_type t
+                             on a.attrelid = t.typrelid
+                        join pg_catalog.pg_namespace n
+                             on ( n.oid = t.typnamespace )
+                        join types
+                             on ( types.nspname = n.nspname
+                                 and types.table_name = pg_catalog.format_type ( t.oid, null ) )
+               where a.attnum > 0
+                 and not a.attisdropped
+           )
+      select cols.table_name,
+             cols.column_name,
+             cols.udt_name,
+             cols.is_nullable
+      from cols
+      
+      union all
+      
+      select *
+from (select table_name, column_name, udt_name, is_nullable
+      from information_schema.columns
+      where table_schema = '$schemaName'
+
+      order BY table_name, ordinal_position asc ) as tables;
+  ''';
 
   if (tableNames.length == 1) {
-    rawQuery = rawQuery + "AND table_name = '${tableNames[0]}'";
+    rawQuery = rawQuery + "and table_name = '${tableNames[0]}'";
   } else if (tableNames.length > 1) {
-    rawQuery = rawQuery + 'AND table_name in (' + tableNames.reduce((t1, t2) => "'$t1', '$t2'") + ')';
+    rawQuery = rawQuery + 'and table_name in (' + tableNames.reduce((t1, t2) => "'$t1', '$t2'") + ')';
   }
-
-  rawQuery = rawQuery + 'ORDER BY table_name ASC;';
 
   return rawQuery;
 }
