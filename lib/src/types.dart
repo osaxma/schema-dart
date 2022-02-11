@@ -83,7 +83,7 @@ String getDartType(String postgresType, bool isNullable) {
       break;
     case 'json':
     case 'jsonb':
-      dartType = 'Object'; // this can be different types (e.g. List or Map)
+      dartType = 'Json'; // this can be different types (e.g. List or Map)
       break;
     case 'date':
     case 'timestamp':
@@ -113,13 +113,13 @@ String getDartType(String postgresType, bool isNullable) {
       break;
     case '_json':
     case '_jsonb':
-      dartType = 'List<Object>'; // this can be different types (e.g. List<List> or List<Map>)
+      dartType = 'List<Json>'; // this can be different types (e.g. List<List> or List<Map>)
       break;
     case '_timestamptz':
       dartType = 'List<DateTime>';
       break;
     default:
-      dartType = 'Object'; // or dynamic?
+      dartType = 'dynamic'; // or dynamic?
   }
   return dartType + (isNullable ? '?' : '');
 }

@@ -28,6 +28,8 @@ class DataClassBuilder {
 
   bool get requiresConvertImport => config.generateSerialization;
 
+  bool get requiresJsonImport => config.generateJsonClass;
+
   bool get requiresCollectionImport => hasCollection && config.generateEquality;
 
   String get className => table.dartClassName;
@@ -65,6 +67,11 @@ class DataClassBuilder {
     if (requiresCollectionImport) {
       // add convert import to source
       source = "import '$_collectionImportUri';\n" + source;
+    }
+
+    if (config.generateJsonClass) {
+      // add Json class to source
+      source = "import 'json.dart';\n" + source; //todo ../json.dar
     }
 
     if (config.generateListBuilder) {
@@ -138,9 +145,7 @@ class DataClassBuilder {
     addTrailingCommaToParameters(parameters);
 
     // create the body
-    final body = fields
-        .map((field) => '${field.name}: ${field.name} ?? this.${field.name}')
-        .reduce((value, element) => value + ',' + element);
+    final body = fields.map((field) => '${field.name}: ${field.name} ?? this.${field.name}').reduce((value, element) => value + ',' + element);
 
     final copyWithMethod = Method((b) {
       b
@@ -225,8 +230,7 @@ class DataClassBuilder {
   }
 
   void buildFromMapConstructor() {
-    final constructorBody =
-        fields.map((p) => p.fromMapArgumentAndAssignmentString).reduce((value, element) => value + ',' + element);
+    final constructorBody = fields.map((p) => p.fromMapArgumentAndAssignmentString).reduce((value, element) => value + ',' + element);
     // return Code('return ${clazz.name.name}($body,);');
 
     final constructor = Constructor((b) {
@@ -405,20 +409,29 @@ class _Field {
         break;
       case 'int':
         // - int --> map['fieldName']?.toInt()       OR     int.parse(map['fieldName'])
-        assignment = isNullable ? 'int.tryParse($mapKey.toString())' : 'int.parse($mapKey)';
+        assignment = isNullable ? 'int.tryParse($mapKey ?? \'\')' : 'int.parse($mapKey)';
         break;
       case 'double':
         // - double --> map['fieldName']?.double()   OR     double.parse(map['fieldName'])
         // note: dart, especially when used with web, would convert double to integer (1.0 -> 1) so account for it.
-        assignment = isNullable ? 'double.tryParse($mapKey.toString())' : 'double.parse($mapKey)';
+        assignment = isNullable ? 'double.tryParse($mapKey ?? \'\')' : 'double.parse($mapKey)';
         break;
       case 'DateTime':
-        assignment = isNullable ? 'DateTime.tryParse($mapKey.toString())' : 'DateTime.parse($mapKey)';
+        assignment = isNullable ? 'DateTime.tryParse($mapKey ?? \'\')' : 'DateTime.parse($mapKey)';
+        break;
+      case 'Json':
+        assignment = 'Json([$mapKey])';
         break;
     }
 
     if (isCollection) {
-      assignment = isNullable ? '$mapKey == null ? null : ${type.replaceAll('?', '')}.from($mapKey)' : '$type.from($mapKey)';
+      if (type.replaceAll('?', '') == 'List<Json>') {
+        assignment = isNullable
+            ? '$mapKey == null ? null : ${type.replaceAll('?', '')}.generate(($mapKey as List).length, (i) => Json(($mapKey as List)[i]))'
+            : '${type.replaceAll('?', '')}.generate(($mapKey as List).length, (i) => Json(($mapKey as List)[i]))';
+      } else {
+        assignment = isNullable ? '$mapKey == null ? null : ${type.replaceAll('?', '')}.from($mapKey)' : '$type.from($mapKey)';
+      }
     }
 
     return '$arg: $assignment';
