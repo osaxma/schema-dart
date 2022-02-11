@@ -154,15 +154,15 @@ class PostgresReader {
     // for some reason the table key is empty.
     // result coming like this: `{: {table_name: some_name, column_name: some_name, udt_name: text, is_nullable: NO}}`
     final resultKey = "";
-    // final tables = <String>{};
     final tables = <Table>[];
     for (final row in res) {
       final result = row[resultKey];
+      final schemaName = result?[InfoSchemaColumnNames.schemaName];
       final tableName = result?[InfoSchemaColumnNames.tableName];
       // the query ensures the table names are sorted so we can do this
-      if (tables.isEmpty || tableName != tables.last.tableName) {
+      if (tables.isEmpty || schemaName != tables.last.schemaName || tableName != tables.last.tableName) {
         Log.trace('reading table: $tableName');
-        tables.add(Table(result?[InfoSchemaColumnNames.schemaName], tableName, <ColumnData>[]));
+        tables.add(Table(schemaName, tableName, <ColumnData>[]));
       }
       // get column data
       final columnName = result?[InfoSchemaColumnNames.columnName];

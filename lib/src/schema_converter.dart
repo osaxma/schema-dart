@@ -1,6 +1,7 @@
 import 'dart:io';
 
-import 'package:path/path.dart' as p;
+import 'package:path/path.dart' as path;
+import 'package:schema_dart/src/file_contents.dart';
 import 'package:schema_dart/src/logger.dart';
 import 'package:schema_dart/src/postgres_reader.dart';
 import 'package:schema_dart/src/types_generator.dart';
@@ -84,12 +85,34 @@ class SchemaConverter {
 
   Future<void> _writeFilesToOutputDirectory() async {
     final futures = <Future>[];
+
+    Log.trace('creating json.g.dart');
+    final jsonFile = File(path.join(outputDirectory.path, 'json.g.dart'));
+    futures.add(jsonFile.create(recursive: false).then((value) => jsonFile.writeAsString(jsonFileSource)));
+
     Log.trace('writing files');
     for (final table in _tables) {
-      final file = File(p.join(outputDirectory.path, table.tableName + '.g.dart'));
+      final file = File(path.join(table.schemaName, outputDirectory.path, table.tableName + '.g.dart'));
       futures.add(file.create(recursive: true).then((value) => file.writeAsString(table.source)));
     }
 
     await Future.wait(futures);
+
+    Log.trace('creating models.g.dart');
+    String exports = '';
+    final modelsFile = File(path.join(outputDirectory.path, 'models.g.dart'));
+
+    await for (final dir in outputDirectory.list()) {
+      if (dir is Directory) {
+        final dirName = path.basename(dir.path);
+        await for (final file in dir.list()) {
+          if (file.path.endsWith('.g.dart')) {
+            final dartFileName = path.basename(file.path);
+            exports += 'export \'./$dirName/$dartFileName\';\n';
+          }
+        }
+      }
+    }
+    await modelsFile.create(recursive: false).then((value) => modelsFile.writeAsString(exports));
   }
 }

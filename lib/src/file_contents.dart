@@ -1,3 +1,4 @@
+final String jsonFileSource = '''
 import 'dart:convert';
 import 'dart:developer';
 
@@ -105,7 +106,7 @@ class Json {
       _data = json.decode(data);
       isJunk = false;
     } on FormatException catch (e) {
-      log('{FormatException: ${e.message}, data: $data}');
+      log('{FormatException: \${e.message}, data: \$data}');
       isJunk = true;
     }
     return _data;
@@ -121,3 +122,4 @@ class Json {
   @override
   int get hashCode => data.hashCode;
 }
+''';

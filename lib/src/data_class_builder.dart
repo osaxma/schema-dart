@@ -71,7 +71,7 @@ class DataClassBuilder {
 
     if (config.generateJsonClass) {
       // add Json class to source
-      source = "import 'json.dart';\n" + source; //todo ../json.dar
+      source = "import '../json.g.dart';\n" + source; //todo add if class uses Json
     }
 
     if (config.generateListBuilder) {
