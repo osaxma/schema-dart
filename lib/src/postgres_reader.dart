@@ -127,8 +127,7 @@ class PostgresReader {
     if (schemaNames.length == 1) {
       rawQuery += "and schema_name = '${schemaNames[0]}';";
     } else if (schemaNames.length > 1) {
-      rawQuery +=
-          'and schema_name in (' + schemaNames.reduce((s1, s2) => s1.startsWith("'") ? "$s1, '$s2'" : "'$s1', '$s2'") + ');';
+      rawQuery += 'and schema_name in (' + schemaNames.reduce((s1, s2) => s1.startsWith("'") ? "$s1, '$s2'" : "'$s1', '$s2'") + ');';
     } else {
       rawQuery += ';';
     }
@@ -208,7 +207,7 @@ String _buildColumnTypesQuery({
                   from pg_catalog.pg_type el
                   where el.oid = t.typelem
                     and el.typarray = t.oid)
-                    and ${(schemaNames.length == 1) ? 'n.nspname = ${schemaNames[0]}' : (schemaNames.length > 1) ? 'n.nspname in (' + schemaNames.reduce((s1, s2) => s1.startsWith("'") ? "$s1, '$s2'" : "'$s1', '$s2'") + ')' : ''}
+                    and ${(schemaNames.length == 1) ? 'n.nspname = \'${schemaNames[0]}\'' : (schemaNames.length > 1) ? 'n.nspname in (' + schemaNames.reduce((s1, s2) => s1.startsWith("'") ? "$s1, '$s2'" : "'$s1', '$s2'") + ')' : ''}
       ),
                  t1 as (
                      select n.nspname::text AS schema_name, 
@@ -245,11 +244,11 @@ String _buildColumnTypesQuery({
             select *
             from (select table_schema as schema_name, table_name, column_name, udt_name, is_nullable
                   from information_schema.columns
-                  ${(schemaNames.length == 1) ? 'where table_schema = ${schemaNames[0]}' : (schemaNames.length > 1) ? 'where table_schema in (' + schemaNames.reduce((s1, s2) => s1.startsWith("'") ? "$s1, '$s2'" : "'$s1', '$s2'") + ')' : ''}
+                  ${(schemaNames.length == 1) ? 'where table_schema = \'${schemaNames[0]}\'' : (schemaNames.length > 1) ? 'where table_schema in (' + schemaNames.reduce((s1, s2) => s1.startsWith("'") ? "$s1, '$s2'" : "'$s1', '$s2'") + ')' : ''}
       
                   ORDER BY table_name, ordinal_position asc) as t2
            ) tables
-      ${(tableNames.length == 1) ? 'where table_name = ${tableNames[0]};' : (tableNames.length > 1) ? 'where table_name in (' + tableNames.reduce((t1, t2) => t1.startsWith("'") ? "$t1, '$t2'" : "'$t1', '$t2'") + ');' : ';'}
+      ${(tableNames.length == 1) ? 'where table_name = \'${tableNames[0]}\';' : (tableNames.length > 1) ? 'where table_name in (' + tableNames.reduce((t1, t2) => t1.startsWith("'") ? "$t1, '$t2'" : "'$t1', '$t2'") + ');' : ';'}
   ''';
 
   return rawQuery;
