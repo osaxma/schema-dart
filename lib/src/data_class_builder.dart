@@ -28,7 +28,16 @@ class DataClassBuilder {
 
   bool get requiresConvertImport => config.generateSerialization;
 
-  bool get requiresJsonImport => config.generateJsonClass;
+  // tell builder if the class is using it
+  bool get requiresJsonImport {
+    bool _requires = false;
+    for (final c in table.columns) {
+      if (c.dartType.contains('Json')) {
+        _requires = true;
+      }
+    }
+    return _requires;
+  }
 
   bool get requiresCollectionImport => hasCollection && config.generateEquality;
 
@@ -69,8 +78,8 @@ class DataClassBuilder {
       source = "import '$_collectionImportUri';\n" + source;
     }
 
-    if (config.generateJsonClass) {
-      // add json import to source
+    if (requiresJsonImport) {
+      //add json import to source
       source = "import '../json.g.dart';\n" + source;
     }
 

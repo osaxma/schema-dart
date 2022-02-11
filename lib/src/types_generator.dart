@@ -22,15 +22,7 @@ class TypesGenerator {
 
   Future<void> addDartSourceToTables() async {
     for (final table in tables) {
-      // tell builder to import json.g.dart if the class is using it
-      bool isUsingJson = false;
-      table.columns.forEach((c) {
-        if (c.dartType.contains('Json')) {
-          isUsingJson = true;
-        }
-      });
-
-      final builder = DataClassBuilder(config: isUsingJson ? JsonClassConfig() : config, table: table);
+      final builder = DataClassBuilder(config: config, table: table);
       final source = builder.build();
       table.source = formatter.format(source);
     }
@@ -43,7 +35,6 @@ class TypesGeneratorConfig {
   final bool generateEquality;
   final bool generateToString;
   final bool generateListBuilder;
-  final bool generateJsonClass;
 
   const TypesGeneratorConfig({
     this.generateCopyWith = true,
@@ -51,14 +42,16 @@ class TypesGeneratorConfig {
     this.generateEquality = true,
     this.generateToString = true,
     this.generateListBuilder = true,
-    this.generateJsonClass = false,
   });
 }
 
 class ClassOnlyConfig extends TypesGeneratorConfig {
-  const ClassOnlyConfig() : super(generateCopyWith: false, generateEquality: false, generateSerialization: false, generateToString: false, generateListBuilder: false, generateJsonClass: false);
-}
-
-class JsonClassConfig extends TypesGeneratorConfig {
-  const JsonClassConfig() : super(generateCopyWith: true, generateEquality: true, generateSerialization: true, generateToString: true, generateListBuilder: true, generateJsonClass: true);
+  const ClassOnlyConfig()
+      : super(
+          generateCopyWith: false,
+          generateEquality: false,
+          generateSerialization: false,
+          generateToString: false,
+          generateListBuilder: false,
+        );
 }
