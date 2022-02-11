@@ -60,5 +60,5 @@ class ClassOnlyConfig extends TypesGeneratorConfig {
 }
 
 class JsonClassConfig extends TypesGeneratorConfig {
-  const JsonClassConfig() : super(generateCopyWith: false, generateEquality: false, generateSerialization: false, generateToString: false, generateListBuilder: false, generateJsonClass: true);
+  const JsonClassConfig() : super(generateCopyWith: true, generateEquality: true, generateSerialization: true, generateToString: true, generateListBuilder: true, generateJsonClass: true);
 }
