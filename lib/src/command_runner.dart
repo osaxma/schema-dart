@@ -24,11 +24,12 @@ class SchemaDartRunner extends CommandRunner<void> {
       help: 'The output directory for the generated dart files',
     );
 
-    argParser.addOption(
-      'schema',
+    argParser.addMultiOption(
+      'schemas',
       abbr: 's',
-      defaultsTo: 'public',
-      help: 'specify the schema',
+      // defaultsTo: ['public'],
+      help: 'provide a® specific list of schemas to generate data classes for.\n'
+          '(defaults to all schemas excluding `pg_toast`, `pg_catalog` and `information_schema`)',
     );
 
     argParser.addMultiOption(
@@ -102,14 +103,14 @@ Examples:
     //   throw Exception('The given output directory does not exist: ${outputDirectory.path}');
     // }
 
-    final schema = topLevelResults['schema'];
+    final listOfSchemas = topLevelResults['schemas'];
 
     final listOfTables = topLevelResults['tables'];
 
     final converter = SchemaConverter(
       connectionString: connectionString,
       outputDirectory: outputDirectory,
-      schemaName: schema,
+      schemaNames: listOfSchemas,
       tableNames: listOfTables,
     );
 

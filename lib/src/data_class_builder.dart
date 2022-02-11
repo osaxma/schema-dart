@@ -1,8 +1,10 @@
-import 'package:built_collection/built_collection.dart'; 
+import 'package:built_collection/built_collection.dart';
 import 'package:code_builder/code_builder.dart';
+import 'package:inflection3/inflection3.dart';
 import 'package:schema_dart/src/types.dart';
 
 import 'types_generator.dart';
+import 'util.dart';
 
 class DataClassBuilder {
   final Table table;
@@ -25,6 +27,8 @@ class DataClassBuilder {
   bool get hasCollection => input.hasCollection;
 
   bool get requiresConvertImport => config.generateSerialization;
+
+  bool get requiresJsonImport => config.generateJsonClass;
 
   bool get requiresCollectionImport => hasCollection && config.generateEquality;
 
@@ -63,6 +67,15 @@ class DataClassBuilder {
     if (requiresCollectionImport) {
       // add convert import to source
       source = "import '$_collectionImportUri';\n" + source;
+    }
+
+    if (config.generateJsonClass) {
+      // add Json class to source
+      source = "import '../json.g.dart';\n" + source; //todo add if class uses Json
+    }
+
+    if (config.generateListBuilder) {
+      source = source + generateListBuilderMethod();
     }
 
     return source;
@@ -132,9 +145,7 @@ class DataClassBuilder {
     addTrailingCommaToParameters(parameters);
 
     // create the body
-    final body = fields
-        .map((field) => '${field.name}: ${field.name} ?? this.${field.name}')
-        .reduce((value, element) => value + ',' + element);
+    final body = fields.map((field) => '${field.name}: ${field.name} ?? this.${field.name}').reduce((value, element) => value + ',' + element);
 
     final copyWithMethod = Method((b) {
       b
@@ -219,8 +230,7 @@ class DataClassBuilder {
   }
 
   void buildFromMapConstructor() {
-    final constructorBody =
-        fields.map((p) => p.fromMapArgumentAndAssignmentString).reduce((value, element) => value + ',' + element);
+    final constructorBody = fields.map((p) => p.fromMapArgumentAndAssignmentString).reduce((value, element) => value + ',' + element);
     // return Code('return ${clazz.name.name}($body,);');
 
     final constructor = Constructor((b) {
@@ -256,6 +266,10 @@ class DataClassBuilder {
         ..body = Code('$className.fromMap(json.decode(source))');
     });
     classBuilder.constructors.add(constructor);
+  }
+
+  String generateListBuilderMethod() {
+    return 'List<$className>? ${pluralize(className.toLowerCaseFirst())}(dynamic data) => (data as List?)?.map((e) => $className.fromJson(json.encode(e))).toList();';
   }
 
   void buildToJsonMethod() {
@@ -370,6 +384,11 @@ class _Field {
       if (useUTC) {
         value = value + '.toUtc()';
       }
+      // value = value + '.toIso8601String()';
+    } else if (type == 'DateTime?') {
+      if (useUTC) {
+        value = value + '?.toUtc()';
+      }
       value = value + '.toIso8601String()';
     }
     return "'$key':$value";
@@ -390,20 +409,29 @@ class _Field {
         break;
       case 'int':
         // - int --> map['fieldName']?.toInt()       OR     int.parse(map['fieldName'])
-        assignment = isNullable ? 'int.tryParse($mapKey ?? "")' : 'int.parse($mapKey)';
+        assignment = isNullable ? 'int.tryParse($mapKey ?? \'\')' : 'int.parse($mapKey)';
         break;
       case 'double':
         // - double --> map['fieldName']?.double()   OR     double.parse(map['fieldName'])
         // note: dart, especially when used with web, would convert double to integer (1.0 -> 1) so account for it.
-        assignment = isNullable ? 'double.tryParse($mapKey ?? "")' : 'double.parse($mapKey)';
+        assignment = isNullable ? 'double.tryParse($mapKey ?? \'\')' : 'double.parse($mapKey)';
         break;
       case 'DateTime':
-        assignment = isNullable ? 'DateTime.tryParse($mapKey ?? "")' : 'DateTime.parse($mapKey)';
+        assignment = isNullable ? 'DateTime.tryParse($mapKey ?? \'\')' : 'DateTime.parse($mapKey)';
+        break;
+      case 'Json':
+        assignment = 'Json([$mapKey])';
         break;
     }
 
     if (isCollection) {
-      assignment = isNullable ? '$mapKey == null ? null : $type.from($mapKey)' : '$type.from($mapKey)';
+      if (type.replaceAll('?', '') == 'List<Json>') {
+        assignment = isNullable
+            ? '$mapKey == null ? null : ${type.replaceAll('?', '')}.generate(($mapKey as List).length, (i) => Json(($mapKey as List)[i]))'
+            : '${type.replaceAll('?', '')}.generate(($mapKey as List).length, (i) => Json(($mapKey as List)[i]))';
+      } else {
+        assignment = isNullable ? '$mapKey == null ? null : ${type.replaceAll('?', '')}.from($mapKey)' : '$type.from($mapKey)';
+      }
     }
 
     return '$arg: $assignment';

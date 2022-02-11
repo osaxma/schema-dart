@@ -15,6 +15,7 @@ dependencies:
   dart_style: ^2.2.1
   path: ^1.8.1
   postgres: ^2.4.3
+  inflection3: ^0.5.3+2
 
 dev_dependencies:
   lints: ^1.0.0

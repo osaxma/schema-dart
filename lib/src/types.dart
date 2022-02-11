@@ -2,18 +2,19 @@ import 'util.dart';
 
 /// a simple representation of a table
 class Table {
+  final String schemaName;
   final String tableName;
   final List<ColumnData> columns;
 
   String source = '';
 
-  Table(this.tableName, this.columns);
+  Table(this.schemaName, this.tableName, this.columns);
 
   String get dartClassName => tableName.convertSnakeCaseToCamelCase().toUpperCaseFirst();
 
   @override
   String toString() {
-    return 'Table(tableName: $tableName, columns: ${columns.length})';
+    return 'Table(schemaName: $schemaName, tableName: $tableName, columns: ${columns.length})';
   }
 }
 
@@ -82,7 +83,7 @@ String getDartType(String postgresType, bool isNullable) {
       break;
     case 'json':
     case 'jsonb':
-      dartType = 'Object'; // this can be different types (e.g. List or Map)
+      dartType = 'Json'; // this can be different types (e.g. List or Map)
       break;
     case 'date':
     case 'timestamp':
@@ -112,18 +113,19 @@ String getDartType(String postgresType, bool isNullable) {
       break;
     case '_json':
     case '_jsonb':
-      dartType = 'List<Object>'; // this can be different types (e.g. List<List> or List<Map>)
+      dartType = 'List<Json>'; // this can be different types (e.g. List<List> or List<Map>)
       break;
     case '_timestamptz':
       dartType = 'List<DateTime>';
       break;
     default:
-      dartType = 'Object'; // or dynamic?
+      dartType = 'dynamic'; // or dynamic?
   }
   return dartType + (isNullable ? '?' : '');
 }
 
 class InfoSchemaColumnNames {
+  static const schemaName = 'schema_name';
   static const tableName = 'table_name';
   static const columnName = 'column_name';
   static const dataType = 'udt_name'; // do not use `data_type` (see: NOTES.md)
