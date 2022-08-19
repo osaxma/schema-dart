@@ -10,12 +10,6 @@ The package can be installed as follow:
 [~] dart pub global activate schema_dart
 ```
 
-or
-
-```
-[~] dart pub global activate --source git https://github.com/osaxma/schema-dart.git
-```
-
 
 ## Usage:
 
