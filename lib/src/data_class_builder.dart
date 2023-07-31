@@ -104,7 +104,7 @@ class DataClassBuilder {
       );
     }
 
-    addTrailingCommaToParameters(namedParameters);
+    // addTrailingCommaToParameters(namedParameters);
 
     classBuilder.constructors.add(Constructor((b) {
       b
@@ -129,7 +129,7 @@ class DataClassBuilder {
       ),
     );
 
-    addTrailingCommaToParameters(parameters);
+    // addTrailingCommaToParameters(parameters);
 
     // create the body
     final body = fields

@@ -33,7 +33,8 @@ class TablesReader {
     // expected format: postgresql://<username>:<password>@<host>:<port>/<database-name>
     connectionString = connectionString.trim();
     if (!connectionString.startsWith('postgresql://')) {
-      throw FormatException('The provided connection string does not start with `postgresql://`'
+      throw FormatException(
+          'The provided connection string does not start with `postgresql://`'
           '\nconnectionString = $connectionString');
     }
 
@@ -46,7 +47,8 @@ class TablesReader {
     final parts = connectionString.split(RegExp(r':|@|\/'));
 
     if (connectionString.replaceFirst('@', '').contains('@')) {
-      throw FormatException('Looks like the `@` symbol is used in the password.\n'
+      throw FormatException(
+          'Looks like the `@` symbol is used in the password.\n'
           'replace it with: %40  -- the URL encoding for `@`');
     }
 
@@ -58,7 +60,8 @@ class TablesReader {
     }
 
     if (int.tryParse(parts[3]) == null) {
-      throw FormatException('The port is not formatted correctly, expected an `integer` but got ${parts[3]}');
+      throw FormatException(
+          'The port is not formatted correctly, expected an `integer` but got ${parts[3]}');
     }
 
     /// assign fields:
@@ -92,7 +95,8 @@ class TablesReader {
     List<String>? tableNames,
   }) async {
     tableNames ??= const <String>[];
-    final rawQuery = buildColumnTypesQuery(tableNames: tableNames, schemaName: schemaName);
+    final rawQuery =
+        buildColumnTypesQuery(tableNames: tableNames, schemaName: schemaName);
 
     Log.trace('executing the following query:\n$rawQuery');
 
@@ -114,7 +118,10 @@ class TablesReader {
       // get column data
       final columnName = result?[InfoSchemaColumnNames.columnName];
       final dataType = result?[InfoSchemaColumnNames.dataType];
-      final isNullable = result?[InfoSchemaColumnNames.isNullable].toLowerCase() == 'yes' ? true : false;
+      final isNullable =
+          result?[InfoSchemaColumnNames.isNullable].toLowerCase() == 'yes'
+              ? true
+              : false;
 
       Log.trace('   read column: $columnName');
       final columnData = ColumnData(
@@ -141,7 +148,8 @@ class TablesReader {
     required String schemaName,
     required List<String> tableNames,
   }) {
-    final columns = InfoSchemaColumnNames.all.reduce((c1, c2) => c1 + ', ' + c2);
+    final columns =
+        InfoSchemaColumnNames.all.reduce((c1, c2) => c1 + ', ' + c2);
     String rawQuery = '''
 SELECT $columns
 FROM information_schema.columns
@@ -150,10 +158,13 @@ WHERE table_schema = '$schemaName'
     if (tableNames.length == 1) {
       rawQuery = rawQuery + "AND table_name = '${tableNames[0]}'";
     } else if (tableNames.length > 1) {
-      rawQuery = rawQuery + 'AND table_name in (' + tableNames.reduce((t1, t2) => "'$t1', '$t2'") + ')';
+      rawQuery = rawQuery +
+          'AND table_name in (' +
+          tableNames.reduce((t1, t2) => "'$t1', '$t2'") +
+          ')';
     }
 
-    rawQuery = rawQuery + 'ORDER BY table_name ASC;';
+    rawQuery = rawQuery + 'ORDER BY table_name , ordinal_position ASC;';
 
     return rawQuery;
   }
