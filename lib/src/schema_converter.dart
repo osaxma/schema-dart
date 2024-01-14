@@ -30,7 +30,13 @@ class SchemaConverter {
     // read tables
     Log.trace('started reading tables');
     var progress = Log.progress('reading tables');
-    await _readTables();
+
+    try {
+      await _readTables();
+    } catch (e) {
+      progress.cancel();
+      rethrow;
+    }
     progress.finish(message: 'found ${_tables.length} - tables');
 
     // generate source code
