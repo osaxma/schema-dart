@@ -54,7 +54,10 @@ final _sampleTables = 'CREATE TABLE public.sample_table1 ('
     'name text, '
     'someDouble double precision, '
     'dob date, '
-    'sometime timestamp'
+    'sometime timestamp, '
+    'listOfbool _bool, '
+    'listOfints _int8, '
+    'listOfStrings _text'
     ')';
 
 
