@@ -1,3 +1,7 @@
+## 0.0.2+2
+- fix issue with multiple `-t` arguments 
+- fix issue with deserializing collections
+
 ## 0.0.2+1
 - added `--no-ssl` flag
 
