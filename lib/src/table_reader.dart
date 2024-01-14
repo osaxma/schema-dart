@@ -152,7 +152,10 @@ WHERE table_schema = '$schemaName'
     if (tableNames.length == 1) {
       rawQuery = rawQuery + "AND table_name = '${tableNames[0]}'";
     } else if (tableNames.length > 1) {
-      rawQuery = rawQuery + 'AND table_name in (' + tableNames.reduce((t1, t2) => "'$t1', '$t2'") + ')';
+      final tableNamesString = tableNames.map((t) => "'$t'").reduce((t1, t2) {
+        return "$t1, $t2";
+      });
+      rawQuery = rawQuery + 'AND table_name in (' + tableNamesString + ')';
     }
 
     rawQuery = rawQuery + 'ORDER BY table_name ASC;';
