@@ -34,7 +34,8 @@ Within a dart/flutter project directory, you can run one of the following exampl
   ```
 
 
-  > [!NOTE] : if you receive the following error:
+  > [!NOTE] 
+  > if you receive the following error:
   > ```
   > Severity.error Server does not support SSL, but it was required.
   > ```
