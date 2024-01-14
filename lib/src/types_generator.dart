@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:dart_style/dart_style.dart';
+import 'package:schema_dart/src/logger.dart';
 
 import 'data_class_builder.dart';
 import 'types.dart';
@@ -24,7 +25,18 @@ class TypesGenerator {
     for (final table in tables) {
       final builder = DataClassBuilder(config: config, table: table);
       final source = builder.build();
-      table.source = formatter.format(source);
+      try {
+        // try formatting, if we could not, just use the unformatted code with errors
+        // it will be helpful for debugging and for people to file issues.
+        table.source = formatter.format(source);
+      } catch (e, st) {
+        Log.sterr('Something went wrong and failed to format code');
+        if (Log.verbose) {
+          Log.sterr(e.toString());
+          Log.sterr(st.toString());
+        }
+        table.source = source;
+      }
     }
   }
 }
