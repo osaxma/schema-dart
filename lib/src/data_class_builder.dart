@@ -20,9 +20,9 @@ class DataClassBuilder {
         );
 
   late final ClassBuilder classBuilder = ClassBuilder();
-  late final _TypeBuilderInput input = _TypeBuilderInput.fromTable(table);
+  late final _TypeBuilderInput _input = _TypeBuilderInput.fromTable(table);
 
-  bool get hasCollection => input.hasCollection;
+  bool get hasCollection => _input.hasCollection;
 
   bool get requiresConvertImport => config.generateSerialization;
 
@@ -30,7 +30,7 @@ class DataClassBuilder {
 
   String get className => table.dartClassName;
 
-  List<_Field> get fields => input.fields;
+  List<_Field> get _fields => _input.fields;
 
   String build() {
     // assign the class name
@@ -72,7 +72,7 @@ class DataClassBuilder {
 
   void buildFields() {
     final classFields = <Field>[];
-    for (var field in fields) {
+    for (var field in _fields) {
       classFields.add(Field((b) {
         b
           ..name = field.name
@@ -90,7 +90,7 @@ class DataClassBuilder {
     // first create the constructor parameters
     final namedParameters = <Parameter>[];
 
-    for (final field in fields) {
+    for (final field in _fields) {
       namedParameters.add(
         Parameter(
           (b) {
@@ -104,8 +104,6 @@ class DataClassBuilder {
       );
     }
 
-    addTrailingCommaToParameters(namedParameters);
-
     classBuilder.constructors.add(Constructor((b) {
       b
         ..optionalParameters = ListBuilder(namedParameters)
@@ -117,7 +115,7 @@ class DataClassBuilder {
     // create the parameters
     final parameters = <Parameter>[];
     parameters.addAll(
-      fields.map(
+      _fields.map(
         (p) => Parameter(
           (b) {
             b
@@ -129,10 +127,10 @@ class DataClassBuilder {
       ),
     );
 
-    addTrailingCommaToParameters(parameters);
+    // addTrailingCommaToParameters(parameters);
 
     // create the body
-    final body = fields
+    final body = _fields
         .map((field) => '${field.name}: ${field.name} ?? this.${field.name}')
         .reduce((value, element) => value + ',' + element);
 
@@ -168,7 +166,7 @@ class DataClassBuilder {
 
   // create the body of the method
   Code generateEqualityOperatorBody() {
-    final params = fields.map((field) {
+    final params = _fields.map((field) {
       if (field.isCollection) {
         return 'collectionEquals(other.${field.name}, ${field.name})';
       } else {
@@ -187,7 +185,7 @@ class DataClassBuilder {
   }
 
   void buildHashCodeGetter() {
-    final params = fields.map((field) => '${field.name}.hashCode').reduce((prev, next) => prev + '^' + next);
+    final params = _fields.map((field) => '${field.name}.hashCode').reduce((prev, next) => prev + '^' + next);
     final method = Method((b) {
       b
         ..name = 'hashCode'
@@ -207,7 +205,7 @@ class DataClassBuilder {
   }
 
   void buildToMapMethod() {
-    final body = fields.map((field) => field.toMapKeyAndValueString).reduce((value, element) => value + ',' + element);
+    final body = _fields.map((field) => field.toMapKeyAndValueString).reduce((value, element) => value + ',' + element);
     final method = Method((b) {
       b
         ..name = 'toMap'
@@ -220,7 +218,7 @@ class DataClassBuilder {
 
   void buildFromMapConstructor() {
     final constructorBody =
-        fields.map((p) => p.fromMapArgumentAndAssignmentString).reduce((value, element) => value + ',' + element);
+        _fields.map((p) => p.fromMapArgumentAndAssignmentString).reduce((value, element) => value + ',' + element);
     // return Code('return ${clazz.name.name}($body,);');
 
     final constructor = Constructor((b) {
@@ -271,7 +269,7 @@ class DataClassBuilder {
   }
 
   void buildToStringMethod() {
-    final params = fields.map((p) => p.name + ': ' '\$${p.name}').reduce((prev, next) => prev + ', ' + next);
+    final params = _fields.map((p) => p.name + ': ' '\$${p.name}').reduce((prev, next) => prev + ', ' + next);
     final method = Method((b) {
       b
         ..name = 'toString'
@@ -288,13 +286,13 @@ class DataClassBuilder {
   }
 
   /// adds a trailing comma if the [params] is not empty
-  void addTrailingCommaToParameters(List<Parameter> params) {
-    if (params.isNotEmpty) {
-      // Since there's no method in the Builders to add a trailing comma,
-      // This adds an empty parameter which will add a comma as a trailing one.
-      params.add(Parameter((b) => b.name = ''));
-    }
-  }
+  // void addTrailingCommaToParameters(List<Parameter> params) {
+  //   if (params.isNotEmpty) {
+  //     // Since there's no method in the Builders to add a trailing comma,
+  //     // This adds an empty parameter which will add a comma as a trailing one.
+  //     params.add(Parameter((b) => b.name = ''));
+  //   }
+  // }
 }
 
 const _dartConvertImportUri = "dart:convert";
@@ -354,6 +352,8 @@ class _Field {
     required this.name,
     required this.isNullable,
     required this.type,
+    // TODO: figure out why this was here
+    // ignore: unused_element
     this.useUTC = true,
   }) : typeReference = refer(type);
 

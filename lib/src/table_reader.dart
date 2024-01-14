@@ -5,7 +5,7 @@ import 'logger.dart';
 import 'types.dart';
 
 class TablesReader {
-  late final PostgreSQLConnection _connection;
+  late final Connection _connection;
 
   late final String host;
   late final String databaseName;
@@ -70,16 +70,18 @@ class TablesReader {
   }
 
   Future<void> connect() async {
-    _connection = PostgreSQLConnection(
-      host,
-      port,
-      databaseName,
-      username: username,
-      password: password,
-      timeoutInSeconds: timeout.inSeconds,
-      queryTimeoutInSeconds: queryTimeout.inSeconds,
+    _connection = await Connection.open(
+      Endpoint(
+        host: host,
+        database: databaseName,
+        port: port,
+        username: username,
+        password: password,
+      ),
+      settings: ConnectionSettings(
+        sslMode: SslMode.require,
+      ),
     );
-    await _connection.open();
   }
 
   /// Retrieve the postgres type for all columns
@@ -96,25 +98,22 @@ class TablesReader {
 
     Log.trace('executing the following query:\n$rawQuery');
 
-    final res = await query(rawQuery);
+    final Result res = await _connection.execute(rawQuery);
 
-    // for some reason the table key is empty.
-    // result coming like this: `{: {table_name: some_name, column_name: some_name, udt_name: text, is_nullable: NO}}`
-    final resultKey = "";
-    // final tables = <String>{};
     final tables = <Table>[];
-    for (final row in res) {
-      final result = row[resultKey];
-      final tableName = result?[InfoSchemaColumnNames.tableName];
+    for (ResultRow row in res) {
+      // final map =
+      final result = row.toColumnMap();
+      final tableName = result[InfoSchemaColumnNames.tableName];
       // the query ensures the table names are sorted so we can do this
       if (tables.isEmpty || tableName != tables.last.tableName) {
         Log.trace('reading table: $tableName');
         tables.add(Table(tableName, <ColumnData>[]));
       }
       // get column data
-      final columnName = result?[InfoSchemaColumnNames.columnName];
-      final dataType = result?[InfoSchemaColumnNames.dataType];
-      final isNullable = result?[InfoSchemaColumnNames.isNullable].toLowerCase() == 'yes' ? true : false;
+      final columnName = result[InfoSchemaColumnNames.columnName];
+      final dataType = result[InfoSchemaColumnNames.dataType];
+      final isNullable = result[InfoSchemaColumnNames.isNullable].toLowerCase() == 'yes' ? true : false;
 
       Log.trace('   read column: $columnName');
       final columnData = ColumnData(
@@ -128,9 +127,9 @@ class TablesReader {
     return tables;
   }
 
-  Future<List<Map<String, Map<String, dynamic>>>> query(String rawQuery) async {
-    return await _connection.mappedResultsQuery(rawQuery);
-  }
+  // Future<Result> query(String rawQuery) async {
+  //   return (query);
+  // }
 
   Future<void> disconnect() async {
     await _connection.close();

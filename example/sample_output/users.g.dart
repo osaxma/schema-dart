@@ -2,301 +2,347 @@ import 'dart:convert';
 
 class Users {
   const Users({
-    this.lastSignInAt,
+    this.emailChangeTokenCurrent,
+    this.reauthenticationToken,
+    this.aud,
     this.role,
-    this.phoneConfirmedAt,
-    this.instanceId,
-    this.phone,
+    this.email,
+    this.encryptedPassword,
+    this.confirmationToken,
     this.recoveryToken,
+    this.emailChangeTokenNew,
+    this.emailChange,
+    this.lastSignInAt,
     this.rawAppMetaData,
-    this.confirmationSentAt,
-    this.recoverySentAt,
+    this.isSuperAdmin,
     this.rawUserMetaData,
-    required this.id,
     this.createdAt,
-    this.phoneChangeToken,
+    this.updatedAt,
+    this.phoneConfirmedAt,
     this.phoneChangeSentAt,
     this.confirmedAt,
-    this.isSuperAdmin,
-    this.phoneChange,
-    this.emailChangeSentAt,
-    this.emailChangeTokenNew,
-    this.updatedAt,
-    this.email,
     this.emailChangeConfirmStatus,
-    this.encryptedPassword,
+    this.bannedUntil,
+    this.reauthenticationSentAt,
+    required this.isSsoUser,
+    this.deletedAt,
+    this.emailChangeSentAt,
+    this.recoverySentAt,
+    this.confirmationSentAt,
     this.invitedAt,
-    this.emailChangeTokenCurrent,
-    this.aud,
-    this.emailChange,
-    this.confirmationToken,
     this.emailConfirmedAt,
+    required this.id,
+    this.instanceId,
+    this.phone,
+    this.phoneChange,
+    this.phoneChangeToken,
   });
 
   factory Users.fromMap(Map<String, dynamic> map) {
     return Users(
-      lastSignInAt: DateTime.tryParse(map['last_sign_in_at'] ?? ""),
+      emailChangeTokenCurrent: map['email_change_token_current'],
+      reauthenticationToken: map['reauthentication_token'],
+      aud: map['aud'],
       role: map['role'],
-      phoneConfirmedAt: DateTime.tryParse(map['phone_confirmed_at'] ?? ""),
-      instanceId: map['instance_id'],
-      phone: map['phone'],
+      email: map['email'],
+      encryptedPassword: map['encrypted_password'],
+      confirmationToken: map['confirmation_token'],
       recoveryToken: map['recovery_token'],
+      emailChangeTokenNew: map['email_change_token_new'],
+      emailChange: map['email_change'],
+      lastSignInAt: DateTime.tryParse(map['last_sign_in_at'] ?? ""),
       rawAppMetaData: map['raw_app_meta_data'],
-      confirmationSentAt: DateTime.tryParse(map['confirmation_sent_at'] ?? ""),
-      recoverySentAt: DateTime.tryParse(map['recovery_sent_at'] ?? ""),
+      isSuperAdmin: map['is_super_admin'],
       rawUserMetaData: map['raw_user_meta_data'],
-      id: map['id'],
       createdAt: DateTime.tryParse(map['created_at'] ?? ""),
-      phoneChangeToken: map['phone_change_token'],
+      updatedAt: DateTime.tryParse(map['updated_at'] ?? ""),
+      phoneConfirmedAt: DateTime.tryParse(map['phone_confirmed_at'] ?? ""),
       phoneChangeSentAt: DateTime.tryParse(map['phone_change_sent_at'] ?? ""),
       confirmedAt: DateTime.tryParse(map['confirmed_at'] ?? ""),
-      isSuperAdmin: map['is_super_admin'],
-      phoneChange: map['phone_change'],
-      emailChangeSentAt: DateTime.tryParse(map['email_change_sent_at'] ?? ""),
-      emailChangeTokenNew: map['email_change_token_new'],
-      updatedAt: DateTime.tryParse(map['updated_at'] ?? ""),
-      email: map['email'],
       emailChangeConfirmStatus: int.tryParse(map['email_change_confirm_status'] ?? ""),
-      encryptedPassword: map['encrypted_password'],
+      bannedUntil: DateTime.tryParse(map['banned_until'] ?? ""),
+      reauthenticationSentAt: DateTime.tryParse(map['reauthentication_sent_at'] ?? ""),
+      isSsoUser: map['is_sso_user'],
+      deletedAt: DateTime.tryParse(map['deleted_at'] ?? ""),
+      emailChangeSentAt: DateTime.tryParse(map['email_change_sent_at'] ?? ""),
+      recoverySentAt: DateTime.tryParse(map['recovery_sent_at'] ?? ""),
+      confirmationSentAt: DateTime.tryParse(map['confirmation_sent_at'] ?? ""),
       invitedAt: DateTime.tryParse(map['invited_at'] ?? ""),
-      emailChangeTokenCurrent: map['email_change_token_current'],
-      aud: map['aud'],
-      emailChange: map['email_change'],
-      confirmationToken: map['confirmation_token'],
       emailConfirmedAt: DateTime.tryParse(map['email_confirmed_at'] ?? ""),
+      id: map['id'],
+      instanceId: map['instance_id'],
+      phone: map['phone'],
+      phoneChange: map['phone_change'],
+      phoneChangeToken: map['phone_change_token'],
     );
   }
 
   factory Users.fromJson(String source) => Users.fromMap(json.decode(source));
 
-  final DateTime? lastSignInAt;
+  final String? emailChangeTokenCurrent;
+
+  final String? reauthenticationToken;
+
+  final String? aud;
 
   final String? role;
 
-  final DateTime? phoneConfirmedAt;
+  final String? email;
 
-  final String? instanceId;
+  final String? encryptedPassword;
 
-  final String? phone;
+  final String? confirmationToken;
 
   final String? recoveryToken;
 
+  final String? emailChangeTokenNew;
+
+  final String? emailChange;
+
+  final DateTime? lastSignInAt;
+
   final Object? rawAppMetaData;
 
-  final DateTime? confirmationSentAt;
-
-  final DateTime? recoverySentAt;
+  final bool? isSuperAdmin;
 
   final Object? rawUserMetaData;
 
-  final String id;
-
   final DateTime? createdAt;
 
-  final String? phoneChangeToken;
+  final DateTime? updatedAt;
+
+  final DateTime? phoneConfirmedAt;
 
   final DateTime? phoneChangeSentAt;
 
   final DateTime? confirmedAt;
 
-  final bool? isSuperAdmin;
+  final int? emailChangeConfirmStatus;
 
-  final String? phoneChange;
+  final DateTime? bannedUntil;
+
+  final DateTime? reauthenticationSentAt;
+
+  final bool isSsoUser;
+
+  final DateTime? deletedAt;
 
   final DateTime? emailChangeSentAt;
 
-  final String? emailChangeTokenNew;
+  final DateTime? recoverySentAt;
 
-  final DateTime? updatedAt;
-
-  final String? email;
-
-  final int? emailChangeConfirmStatus;
-
-  final String? encryptedPassword;
+  final DateTime? confirmationSentAt;
 
   final DateTime? invitedAt;
 
-  final String? emailChangeTokenCurrent;
-
-  final String? aud;
-
-  final String? emailChange;
-
-  final String? confirmationToken;
-
   final DateTime? emailConfirmedAt;
 
+  final String id;
+
+  final String? instanceId;
+
+  final String? phone;
+
+  final String? phoneChange;
+
+  final String? phoneChangeToken;
+
   Users copyWith({
-    DateTime? lastSignInAt,
+    String? emailChangeTokenCurrent,
+    String? reauthenticationToken,
+    String? aud,
     String? role,
-    DateTime? phoneConfirmedAt,
-    String? instanceId,
-    String? phone,
+    String? email,
+    String? encryptedPassword,
+    String? confirmationToken,
     String? recoveryToken,
+    String? emailChangeTokenNew,
+    String? emailChange,
+    DateTime? lastSignInAt,
     Object? rawAppMetaData,
-    DateTime? confirmationSentAt,
-    DateTime? recoverySentAt,
+    bool? isSuperAdmin,
     Object? rawUserMetaData,
-    String? id,
     DateTime? createdAt,
-    String? phoneChangeToken,
+    DateTime? updatedAt,
+    DateTime? phoneConfirmedAt,
     DateTime? phoneChangeSentAt,
     DateTime? confirmedAt,
-    bool? isSuperAdmin,
-    String? phoneChange,
-    DateTime? emailChangeSentAt,
-    String? emailChangeTokenNew,
-    DateTime? updatedAt,
-    String? email,
     int? emailChangeConfirmStatus,
-    String? encryptedPassword,
+    DateTime? bannedUntil,
+    DateTime? reauthenticationSentAt,
+    bool? isSsoUser,
+    DateTime? deletedAt,
+    DateTime? emailChangeSentAt,
+    DateTime? recoverySentAt,
+    DateTime? confirmationSentAt,
     DateTime? invitedAt,
-    String? emailChangeTokenCurrent,
-    String? aud,
-    String? emailChange,
-    String? confirmationToken,
     DateTime? emailConfirmedAt,
+    String? id,
+    String? instanceId,
+    String? phone,
+    String? phoneChange,
+    String? phoneChangeToken,
   }) {
     return Users(
-      lastSignInAt: lastSignInAt ?? this.lastSignInAt,
+      emailChangeTokenCurrent: emailChangeTokenCurrent ?? this.emailChangeTokenCurrent,
+      reauthenticationToken: reauthenticationToken ?? this.reauthenticationToken,
+      aud: aud ?? this.aud,
       role: role ?? this.role,
-      phoneConfirmedAt: phoneConfirmedAt ?? this.phoneConfirmedAt,
-      instanceId: instanceId ?? this.instanceId,
-      phone: phone ?? this.phone,
+      email: email ?? this.email,
+      encryptedPassword: encryptedPassword ?? this.encryptedPassword,
+      confirmationToken: confirmationToken ?? this.confirmationToken,
       recoveryToken: recoveryToken ?? this.recoveryToken,
+      emailChangeTokenNew: emailChangeTokenNew ?? this.emailChangeTokenNew,
+      emailChange: emailChange ?? this.emailChange,
+      lastSignInAt: lastSignInAt ?? this.lastSignInAt,
       rawAppMetaData: rawAppMetaData ?? this.rawAppMetaData,
-      confirmationSentAt: confirmationSentAt ?? this.confirmationSentAt,
-      recoverySentAt: recoverySentAt ?? this.recoverySentAt,
+      isSuperAdmin: isSuperAdmin ?? this.isSuperAdmin,
       rawUserMetaData: rawUserMetaData ?? this.rawUserMetaData,
-      id: id ?? this.id,
       createdAt: createdAt ?? this.createdAt,
-      phoneChangeToken: phoneChangeToken ?? this.phoneChangeToken,
+      updatedAt: updatedAt ?? this.updatedAt,
+      phoneConfirmedAt: phoneConfirmedAt ?? this.phoneConfirmedAt,
       phoneChangeSentAt: phoneChangeSentAt ?? this.phoneChangeSentAt,
       confirmedAt: confirmedAt ?? this.confirmedAt,
-      isSuperAdmin: isSuperAdmin ?? this.isSuperAdmin,
-      phoneChange: phoneChange ?? this.phoneChange,
-      emailChangeSentAt: emailChangeSentAt ?? this.emailChangeSentAt,
-      emailChangeTokenNew: emailChangeTokenNew ?? this.emailChangeTokenNew,
-      updatedAt: updatedAt ?? this.updatedAt,
-      email: email ?? this.email,
       emailChangeConfirmStatus: emailChangeConfirmStatus ?? this.emailChangeConfirmStatus,
-      encryptedPassword: encryptedPassword ?? this.encryptedPassword,
+      bannedUntil: bannedUntil ?? this.bannedUntil,
+      reauthenticationSentAt: reauthenticationSentAt ?? this.reauthenticationSentAt,
+      isSsoUser: isSsoUser ?? this.isSsoUser,
+      deletedAt: deletedAt ?? this.deletedAt,
+      emailChangeSentAt: emailChangeSentAt ?? this.emailChangeSentAt,
+      recoverySentAt: recoverySentAt ?? this.recoverySentAt,
+      confirmationSentAt: confirmationSentAt ?? this.confirmationSentAt,
       invitedAt: invitedAt ?? this.invitedAt,
-      emailChangeTokenCurrent: emailChangeTokenCurrent ?? this.emailChangeTokenCurrent,
-      aud: aud ?? this.aud,
-      emailChange: emailChange ?? this.emailChange,
-      confirmationToken: confirmationToken ?? this.confirmationToken,
       emailConfirmedAt: emailConfirmedAt ?? this.emailConfirmedAt,
+      id: id ?? this.id,
+      instanceId: instanceId ?? this.instanceId,
+      phone: phone ?? this.phone,
+      phoneChange: phoneChange ?? this.phoneChange,
+      phoneChangeToken: phoneChangeToken ?? this.phoneChangeToken,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
-      'last_sign_in_at': lastSignInAt,
+      'email_change_token_current': emailChangeTokenCurrent,
+      'reauthentication_token': reauthenticationToken,
+      'aud': aud,
       'role': role,
-      'phone_confirmed_at': phoneConfirmedAt,
-      'instance_id': instanceId,
-      'phone': phone,
+      'email': email,
+      'encrypted_password': encryptedPassword,
+      'confirmation_token': confirmationToken,
       'recovery_token': recoveryToken,
+      'email_change_token_new': emailChangeTokenNew,
+      'email_change': emailChange,
+      'last_sign_in_at': lastSignInAt,
       'raw_app_meta_data': rawAppMetaData,
-      'confirmation_sent_at': confirmationSentAt,
-      'recovery_sent_at': recoverySentAt,
+      'is_super_admin': isSuperAdmin,
       'raw_user_meta_data': rawUserMetaData,
-      'id': id,
       'created_at': createdAt,
-      'phone_change_token': phoneChangeToken,
+      'updated_at': updatedAt,
+      'phone_confirmed_at': phoneConfirmedAt,
       'phone_change_sent_at': phoneChangeSentAt,
       'confirmed_at': confirmedAt,
-      'is_super_admin': isSuperAdmin,
-      'phone_change': phoneChange,
-      'email_change_sent_at': emailChangeSentAt,
-      'email_change_token_new': emailChangeTokenNew,
-      'updated_at': updatedAt,
-      'email': email,
       'email_change_confirm_status': emailChangeConfirmStatus,
-      'encrypted_password': encryptedPassword,
+      'banned_until': bannedUntil,
+      'reauthentication_sent_at': reauthenticationSentAt,
+      'is_sso_user': isSsoUser,
+      'deleted_at': deletedAt,
+      'email_change_sent_at': emailChangeSentAt,
+      'recovery_sent_at': recoverySentAt,
+      'confirmation_sent_at': confirmationSentAt,
       'invited_at': invitedAt,
-      'email_change_token_current': emailChangeTokenCurrent,
-      'aud': aud,
-      'email_change': emailChange,
-      'confirmation_token': confirmationToken,
       'email_confirmed_at': emailConfirmedAt,
+      'id': id,
+      'instance_id': instanceId,
+      'phone': phone,
+      'phone_change': phoneChange,
+      'phone_change_token': phoneChangeToken,
     };
   }
 
   String toJson() => json.encode(toMap());
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
     return other is Users &&
-        other.lastSignInAt == lastSignInAt &&
+        other.emailChangeTokenCurrent == emailChangeTokenCurrent &&
+        other.reauthenticationToken == reauthenticationToken &&
+        other.aud == aud &&
         other.role == role &&
-        other.phoneConfirmedAt == phoneConfirmedAt &&
-        other.instanceId == instanceId &&
-        other.phone == phone &&
+        other.email == email &&
+        other.encryptedPassword == encryptedPassword &&
+        other.confirmationToken == confirmationToken &&
         other.recoveryToken == recoveryToken &&
+        other.emailChangeTokenNew == emailChangeTokenNew &&
+        other.emailChange == emailChange &&
+        other.lastSignInAt == lastSignInAt &&
         other.rawAppMetaData == rawAppMetaData &&
-        other.confirmationSentAt == confirmationSentAt &&
-        other.recoverySentAt == recoverySentAt &&
+        other.isSuperAdmin == isSuperAdmin &&
         other.rawUserMetaData == rawUserMetaData &&
-        other.id == id &&
         other.createdAt == createdAt &&
-        other.phoneChangeToken == phoneChangeToken &&
+        other.updatedAt == updatedAt &&
+        other.phoneConfirmedAt == phoneConfirmedAt &&
         other.phoneChangeSentAt == phoneChangeSentAt &&
         other.confirmedAt == confirmedAt &&
-        other.isSuperAdmin == isSuperAdmin &&
-        other.phoneChange == phoneChange &&
-        other.emailChangeSentAt == emailChangeSentAt &&
-        other.emailChangeTokenNew == emailChangeTokenNew &&
-        other.updatedAt == updatedAt &&
-        other.email == email &&
         other.emailChangeConfirmStatus == emailChangeConfirmStatus &&
-        other.encryptedPassword == encryptedPassword &&
+        other.bannedUntil == bannedUntil &&
+        other.reauthenticationSentAt == reauthenticationSentAt &&
+        other.isSsoUser == isSsoUser &&
+        other.deletedAt == deletedAt &&
+        other.emailChangeSentAt == emailChangeSentAt &&
+        other.recoverySentAt == recoverySentAt &&
+        other.confirmationSentAt == confirmationSentAt &&
         other.invitedAt == invitedAt &&
-        other.emailChangeTokenCurrent == emailChangeTokenCurrent &&
-        other.aud == aud &&
-        other.emailChange == emailChange &&
-        other.confirmationToken == confirmationToken &&
-        other.emailConfirmedAt == emailConfirmedAt;
+        other.emailConfirmedAt == emailConfirmedAt &&
+        other.id == id &&
+        other.instanceId == instanceId &&
+        other.phone == phone &&
+        other.phoneChange == phoneChange &&
+        other.phoneChangeToken == phoneChangeToken;
   }
 
   @override
   int get hashCode {
-    return lastSignInAt.hashCode ^
+    return emailChangeTokenCurrent.hashCode ^
+        reauthenticationToken.hashCode ^
+        aud.hashCode ^
         role.hashCode ^
-        phoneConfirmedAt.hashCode ^
-        instanceId.hashCode ^
-        phone.hashCode ^
+        email.hashCode ^
+        encryptedPassword.hashCode ^
+        confirmationToken.hashCode ^
         recoveryToken.hashCode ^
+        emailChangeTokenNew.hashCode ^
+        emailChange.hashCode ^
+        lastSignInAt.hashCode ^
         rawAppMetaData.hashCode ^
-        confirmationSentAt.hashCode ^
-        recoverySentAt.hashCode ^
+        isSuperAdmin.hashCode ^
         rawUserMetaData.hashCode ^
-        id.hashCode ^
         createdAt.hashCode ^
-        phoneChangeToken.hashCode ^
+        updatedAt.hashCode ^
+        phoneConfirmedAt.hashCode ^
         phoneChangeSentAt.hashCode ^
         confirmedAt.hashCode ^
-        isSuperAdmin.hashCode ^
-        phoneChange.hashCode ^
-        emailChangeSentAt.hashCode ^
-        emailChangeTokenNew.hashCode ^
-        updatedAt.hashCode ^
-        email.hashCode ^
         emailChangeConfirmStatus.hashCode ^
-        encryptedPassword.hashCode ^
+        bannedUntil.hashCode ^
+        reauthenticationSentAt.hashCode ^
+        isSsoUser.hashCode ^
+        deletedAt.hashCode ^
+        emailChangeSentAt.hashCode ^
+        recoverySentAt.hashCode ^
+        confirmationSentAt.hashCode ^
         invitedAt.hashCode ^
-        emailChangeTokenCurrent.hashCode ^
-        aud.hashCode ^
-        emailChange.hashCode ^
-        confirmationToken.hashCode ^
-        emailConfirmedAt.hashCode;
+        emailConfirmedAt.hashCode ^
+        id.hashCode ^
+        instanceId.hashCode ^
+        phone.hashCode ^
+        phoneChange.hashCode ^
+        phoneChangeToken.hashCode;
   }
 
   @override
   String toString() {
-    return 'Users(lastSignInAt: $lastSignInAt, role: $role, phoneConfirmedAt: $phoneConfirmedAt, instanceId: $instanceId, phone: $phone, recoveryToken: $recoveryToken, rawAppMetaData: $rawAppMetaData, confirmationSentAt: $confirmationSentAt, recoverySentAt: $recoverySentAt, rawUserMetaData: $rawUserMetaData, id: $id, createdAt: $createdAt, phoneChangeToken: $phoneChangeToken, phoneChangeSentAt: $phoneChangeSentAt, confirmedAt: $confirmedAt, isSuperAdmin: $isSuperAdmin, phoneChange: $phoneChange, emailChangeSentAt: $emailChangeSentAt, emailChangeTokenNew: $emailChangeTokenNew, updatedAt: $updatedAt, email: $email, emailChangeConfirmStatus: $emailChangeConfirmStatus, encryptedPassword: $encryptedPassword, invitedAt: $invitedAt, emailChangeTokenCurrent: $emailChangeTokenCurrent, aud: $aud, emailChange: $emailChange, confirmationToken: $confirmationToken, emailConfirmedAt: $emailConfirmedAt)';
+    return 'Users(emailChangeTokenCurrent: $emailChangeTokenCurrent, reauthenticationToken: $reauthenticationToken, aud: $aud, role: $role, email: $email, encryptedPassword: $encryptedPassword, confirmationToken: $confirmationToken, recoveryToken: $recoveryToken, emailChangeTokenNew: $emailChangeTokenNew, emailChange: $emailChange, lastSignInAt: $lastSignInAt, rawAppMetaData: $rawAppMetaData, isSuperAdmin: $isSuperAdmin, rawUserMetaData: $rawUserMetaData, createdAt: $createdAt, updatedAt: $updatedAt, phoneConfirmedAt: $phoneConfirmedAt, phoneChangeSentAt: $phoneChangeSentAt, confirmedAt: $confirmedAt, emailChangeConfirmStatus: $emailChangeConfirmStatus, bannedUntil: $bannedUntil, reauthenticationSentAt: $reauthenticationSentAt, isSsoUser: $isSsoUser, deletedAt: $deletedAt, emailChangeSentAt: $emailChangeSentAt, recoverySentAt: $recoverySentAt, confirmationSentAt: $confirmationSentAt, invitedAt: $invitedAt, emailConfirmedAt: $emailConfirmedAt, id: $id, instanceId: $instanceId, phone: $phone, phoneChange: $phoneChange, phoneChangeToken: $phoneChangeToken)';
   }
 }

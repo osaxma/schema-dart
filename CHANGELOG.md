@@ -1,3 +1,7 @@
+## 0.0.2
+- fixed some issues with trailing commas #9 & #10
+- added some tests
+
 ## 0.0.1+4
 updated readme and added simple tests
 

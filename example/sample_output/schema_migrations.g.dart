@@ -1,9 +1,7 @@
 import 'dart:convert';
 
 class SchemaMigrations {
-  const SchemaMigrations({
-    required this.version,
-  });
+  const SchemaMigrations({required this.version});
 
   factory SchemaMigrations.fromMap(Map<String, dynamic> map) {
     return SchemaMigrations(
@@ -15,9 +13,7 @@ class SchemaMigrations {
 
   final String version;
 
-  SchemaMigrations copyWith({
-    String? version,
-  }) {
+  SchemaMigrations copyWith({String? version}) {
     return SchemaMigrations(
       version: version ?? this.version,
     );
@@ -30,6 +26,7 @@ class SchemaMigrations {
   }
 
   String toJson() => json.encode(toMap());
+
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
