@@ -34,6 +34,15 @@ Within a dart/flutter project directory, you can run one of the following exampl
   ```
 
 
+  > [!NOTE] : if you receive the following error:
+  > ```
+  > Severity.error Server does not support SSL, but it was required.
+  > ```
+  > you can pass `--no-ssl` flag such as (not recommended):
+  > ```
+  > schema-dart --no-ssl -c  <connection-string> -o <output-dir> 
+  > ```
+
 ## Sample Output:
 
 The following folder: [example/sample_output](https://github.com/osaxma/schema-dart/tree/main/example/sample_output) contains a sample output from Supabase's `auth` schema.

@@ -1,3 +1,6 @@
+## 0.0.2+1
+- added `--no-ssl` flag
+
 ## 0.0.2
 - fixed some issues with trailing commas #9 & #10
 - added some tests
