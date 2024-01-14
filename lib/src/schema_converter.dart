@@ -17,6 +17,8 @@ class SchemaConverter {
   /// an optional list of tables to generate the data classes fromƒ
   final List<String>? tableNames;
 
+  final bool disableSSL;
+
   final _tables = <Table>[];
 
   SchemaConverter({
@@ -24,6 +26,7 @@ class SchemaConverter {
     required this.outputDirectory,
     required this.schemaName,
     this.tableNames,
+    this.disableSSL = false
   });
 
   Future<void> convert() async {
@@ -53,7 +56,7 @@ class SchemaConverter {
   }
 
   Future<void> _readTables() async {
-    final reader = TablesReader.fromConnectionString(connectionString);
+    final reader = TablesReader.fromConnectionString(connectionString, disableSSL: disableSSL);
     Log.trace('connecting to database');
     await reader.connect();
     Log.trace('calling TablesReader.getTables');

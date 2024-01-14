@@ -14,6 +14,7 @@ class TablesReader {
   late final String? password;
   final Duration timeout;
   final Duration queryTimeout;
+  final bool disableSSL;
 
   TablesReader({
     required this.host,
@@ -23,12 +24,14 @@ class TablesReader {
     this.password,
     this.timeout = const Duration(seconds: 30),
     this.queryTimeout = const Duration(seconds: 30),
+    this.disableSSL = false,
   });
 
   TablesReader.fromConnectionString(
     String connectionString, {
     this.timeout = const Duration(seconds: 30),
     this.queryTimeout = const Duration(seconds: 30),
+    this.disableSSL = false,
   }) {
     // expected format: postgresql://<username>:<password>@<host>:<port>/<database-name>
     connectionString = connectionString.trim();
@@ -79,7 +82,7 @@ class TablesReader {
         password: password,
       ),
       settings: ConnectionSettings(
-        sslMode: SslMode.require,
+        sslMode: disableSSL ? SslMode.disable : SslMode.require,
       ),
     );
   }

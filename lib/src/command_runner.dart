@@ -47,6 +47,12 @@ class SchemaDartRunner extends CommandRunner<void> {
     );
 
     argParser.addFlag(
+      'no-ssl',
+      negatable: false,
+      help: 'Disable SSL for postgres connection (not recommended)',
+    );
+
+    argParser.addFlag(
       'version',
       negatable: false,
       help: 'Print the current version.',
@@ -91,6 +97,8 @@ Examples:
       throw Exception('connection-string is required');
     }
 
+    final disableSSL = topLevelResults['no-ssl'];
+
     // if (topLevelResults['output-dir'] == null) {
     //   throw Exception('output-dir is required');
     // }
@@ -111,6 +119,7 @@ Examples:
       outputDirectory: outputDirectory,
       schemaName: schema,
       tableNames: listOfTables,
+      disableSSL: disableSSL,
     );
 
     await converter.convert();
