@@ -40,16 +40,24 @@ class SchemaDartRunner extends CommandRunner<void> {
     );
 
     argParser.addFlag(
+      'no-ssl',
+      negatable: false,
+      help: 'Disable SSL for postgres connection (not recommended)',
+    );
+
+    argParser.addFlag(
+      'nullable-tables',
+      abbr: 'n',
+      negatable: false,
+      help: 'When provided, all fields in generated class will be nullable '
+          '(useful for subqueries and for local table construction update/insert)',
+    );
+
+    argParser.addFlag(
       'verbose',
       abbr: 'v',
       negatable: false,
       help: 'Enable verbose logging.',
-    );
-
-    argParser.addFlag(
-      'no-ssl',
-      negatable: false,
-      help: 'Disable SSL for postgres connection (not recommended)',
     );
 
     argParser.addFlag(
@@ -60,7 +68,6 @@ class SchemaDartRunner extends CommandRunner<void> {
   }
 
   @override
-  // TODO: implement description
   String get description => '''Generate Data Classes for PostgreSQL schema
   
 Examples: 
@@ -80,7 +87,6 @@ Examples:
   @override
   Future<void> runCommand(ArgResults topLevelResults) async {
     if (topLevelResults['version'] == true) {
-      // ignore: avoid_print
       Log.stdout(schemaDartVersion);
       return;
     }
@@ -99,16 +105,8 @@ Examples:
 
     final disableSSL = topLevelResults['no-ssl'];
 
-    // if (topLevelResults['output-dir'] == null) {
-    //   throw Exception('output-dir is required');
-    // }
-
     final connectionString = topLevelResults['connection-string'] as String;
     final outputDirectory = Directory(topLevelResults['output-dir'] as String);
-
-    // if (!outputDirectory.existsSync()) {
-    //   throw Exception('The given output directory does not exist: ${outputDirectory.path}');
-    // }
 
     final schema = topLevelResults['schema'];
 
