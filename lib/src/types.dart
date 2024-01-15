@@ -23,6 +23,9 @@ class ColumnData {
   final String columnName;
   final String dataType;
   final bool isNullable;
+  final bool isIdentity;
+  final String identityGeneration;
+  final String columnDefault;
 
   String get dartType => getDartType(dataType, isNullable);
 
@@ -33,7 +36,32 @@ class ColumnData {
     required this.columnName,
     required this.dataType,
     required this.isNullable,
+    required this.isIdentity,
+    required this.identityGeneration,
+    required this.columnDefault,
   });
+
+  factory ColumnData.fromMap(Map<String, dynamic> map) {
+    final tableName = map[InfoSchemaColumnNames.tableName] as String;
+    final columnName = map[InfoSchemaColumnNames.columnName] as String;
+    final dataType = map[InfoSchemaColumnNames.dataType] as String;
+    final isNullable = map[InfoSchemaColumnNames.isNullable].toLowerCase() == 'yes' ? true : false;
+    // see discussion at: https://github.com/osaxma/schema-dart/issues/10#issuecomment-1891115948
+    // TL;DR: used to determine if a class member should be nullable or not
+    final isIdentity = map[InfoSchemaColumnNames.isIdentity];
+    final identityGeneration = map[InfoSchemaColumnNames.identityGeneration];
+    final columnDefault = map[InfoSchemaColumnNames.columnDefault];
+
+    return ColumnData(
+      tableName: tableName,
+      columnName: columnName,
+      dataType: dataType,
+      isNullable: isNullable,
+      isIdentity: isIdentity,
+      identityGeneration: identityGeneration,
+      columnDefault: columnDefault,
+    );
+  }
 
   @override
   String toString() {
@@ -128,6 +156,9 @@ class InfoSchemaColumnNames {
   static const columnName = 'column_name';
   static const dataType = 'udt_name'; // do not use `data_type` (see: NOTES.md)
   static const isNullable = 'is_nullable';
+  static const isIdentity = 'is_identity';
+  static const identityGeneration = 'identity_generation';
+  static const columnDefault = 'column_default';
 
   static const all = [
     tableName,
