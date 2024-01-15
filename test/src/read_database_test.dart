@@ -20,11 +20,11 @@ void main() {
       );
       await _createSampleTables(connection);
       reader = TablesReader(
-        host: 'localhost',
-        databaseName: 'postgres',
+        host: server.host,
+        databaseName: server.database,
         port: await server.port,
-        username: 'postgres',
-        password: 'postgres',
+        username: server.username,
+        password: server.password,
       );
       await reader.connect();
     });

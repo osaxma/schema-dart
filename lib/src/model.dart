@@ -24,8 +24,8 @@ class ColumnData {
   final String dataType;
   final bool isNullable;
   final bool isIdentity;
-  final String identityGeneration;
-  final String columnDefault;
+  final String? identityGeneration;
+  final String? columnDefault;
 
   String get dartType => getDartType(dataType, isNullable);
 
@@ -48,7 +48,7 @@ class ColumnData {
     final isNullable = map[InfoSchemaColumnNames.isNullable].toLowerCase() == 'yes' ? true : false;
     // see discussion at: https://github.com/osaxma/schema-dart/issues/10#issuecomment-1891115948
     // TL;DR: used to determine if a class member should be nullable or not
-    final isIdentity = map[InfoSchemaColumnNames.isIdentity];
+    final isIdentity = map[InfoSchemaColumnNames.isIdentity].toLowerCase() == 'yes' ? true : false;
     final identityGeneration = map[InfoSchemaColumnNames.identityGeneration];
     final columnDefault = map[InfoSchemaColumnNames.columnDefault];
 
@@ -165,5 +165,8 @@ class InfoSchemaColumnNames {
     columnName,
     dataType,
     isNullable,
+    isIdentity,
+    identityGeneration,
+    columnDefault,
   ];
 }
