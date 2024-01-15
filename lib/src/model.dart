@@ -41,16 +41,18 @@ class ColumnData {
     required this.columnDefault,
   });
 
-  factory ColumnData.fromMap(Map<String, dynamic> map) {
+  factory ColumnData.fromMap(Map<String, dynamic> map, bool allNullable) {
     final tableName = map[InfoSchemaColumnNames.tableName] as String;
     final columnName = map[InfoSchemaColumnNames.columnName] as String;
     final dataType = map[InfoSchemaColumnNames.dataType] as String;
-    final isNullable = map[InfoSchemaColumnNames.isNullable].toLowerCase() == 'yes' ? true : false;
     // see discussion at: https://github.com/osaxma/schema-dart/issues/10#issuecomment-1891115948
     // TL;DR: used to determine if a class member should be nullable or not
     final isIdentity = map[InfoSchemaColumnNames.isIdentity].toLowerCase() == 'yes' ? true : false;
     final identityGeneration = map[InfoSchemaColumnNames.identityGeneration];
     final columnDefault = map[InfoSchemaColumnNames.columnDefault];
+
+    final isNullable =
+        allNullable ? true : (map[InfoSchemaColumnNames.isNullable].toLowerCase() == 'yes' ? true : false);
 
     return ColumnData(
       tableName: tableName,

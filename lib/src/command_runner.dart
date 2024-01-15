@@ -46,11 +46,11 @@ class SchemaDartRunner extends CommandRunner<void> {
     );
 
     argParser.addFlag(
-      'nullable-tables',
+      'nullable-fields',
       abbr: 'n',
       negatable: false,
       help: 'When provided, all fields in generated class will be nullable '
-          '(useful for subqueries and for local table construction update/insert)',
+          '(useful for partial table queries and for local table construction update/insert)',
     );
 
     argParser.addFlag(
@@ -112,12 +112,15 @@ Examples:
 
     final listOfTables = topLevelResults['tables'];
 
+    final allNullables = topLevelResults['nullable-fields'];
+
     final converter = SchemaConverter(
       connectionString: connectionString,
       outputDirectory: outputDirectory,
       schemaName: schema,
       tableNames: listOfTables,
       disableSSL: disableSSL,
+      allNullable: allNullables,
     );
 
     await converter.convert();
