@@ -43,11 +43,11 @@ void main() {
         expect(expectedColumns.length, table.columns.length);
 
         for (var column in table.columns) {
-          expect(expectedColumns.containsKey(column.columnName), true);
-          final expectedDataType = expectedColumns[column.columnName]!;
+          expect(expectedColumns.containsKey(column.name), true);
+          final expectedDataType = expectedColumns[column.name]!;
           // TODO: our sample table is all nullable
           expect(column.dartType.replaceAll('?', ''), expectedDataType,
-              reason: '${column.columnName} dart type: ${column.dartType} != $expectedDataType');
+              reason: '${column.name} dart type: ${column.dartType} != $expectedDataType');
         }
       }
 

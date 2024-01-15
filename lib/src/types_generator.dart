@@ -4,7 +4,7 @@ import 'package:dart_style/dart_style.dart';
 import 'package:schema_dart/src/logger.dart';
 
 import 'data_class_builder.dart';
-import 'types.dart';
+import 'model.dart';
 
 /// Generates Dart type definitions (aka data classes) from [Table]s
 class TypesGenerator {
