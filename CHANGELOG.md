@@ -1,3 +1,7 @@
+## 0.0.3
+- renamed some APIs to be more descriptive 
+- introduced a new flag `--nullable-fields` which will make all fields in generated class nullable
+
 ## 0.0.2+2
 - fix issue with multiple `-t` arguments 
 - fix issue with deserializing collections
