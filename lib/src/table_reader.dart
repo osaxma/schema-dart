@@ -105,27 +105,31 @@ class TablesReader {
 
     final tables = <Table>[];
     for (ResultRow row in res) {
-      // final map =
       final result = row.toColumnMap();
       final tableName = result[InfoSchemaColumnNames.tableName];
+
       // the query ensures the table names are sorted so we can do this
+      // TODO: figure out what are we exactly doing here on the second condition (totally forgot)
       if (tables.isEmpty || tableName != tables.last.tableName) {
         Log.trace('reading table: $tableName');
         tables.add(Table(tableName, <ColumnData>[]));
       }
+
       // get column data
       final columnName = result[InfoSchemaColumnNames.columnName];
-      final dataType = result[InfoSchemaColumnNames.dataType];
-      final isNullable = result[InfoSchemaColumnNames.isNullable].toLowerCase() == 'yes' ? true : false;
-
       Log.trace('   read column: $columnName');
-      final columnData = ColumnData(
-        tableName: tableName,
-        columnName: columnName,
-        dataType: dataType,
-        isNullable: isNullable,
-      );
-      tables.last.columns.add(columnData);
+
+      try {
+        final columnData = ColumnData.fromMap(result);
+        tables.last.columns.add(columnData);
+      } catch (e, st) {
+        Log.sterr('failed to parse column $columnName');
+        if (Log.verbose) {
+          Log.sterr('$e');
+          Log.sterr('$st');
+        }
+        rethrow;
+      }
     }
     return tables;
   }
