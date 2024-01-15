@@ -123,10 +123,10 @@ class TablesReader {
         final columnData = ColumnData.fromMap(result);
         tables.last.columns.add(columnData);
       } catch (e, st) {
-        Log.sterr('failed to parse column $columnName');
+        Log.stderr('failed to parse column $columnName');
         if (Log.verbose) {
-          Log.sterr('$e');
-          Log.sterr('$st');
+          Log.stderr('$e');
+          Log.stderr('$st');
         }
         rethrow;
       }

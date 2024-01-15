@@ -30,10 +30,10 @@ class TypesGenerator {
         // it will be helpful for debugging and for people to file issues.
         table.source = formatter.format(source);
       } catch (e, st) {
-        Log.sterr('Something went wrong and failed to format code');
+        Log.stderr('Something went wrong and failed to format code');
         if (Log.verbose) {
-          Log.sterr(e.toString());
-          Log.sterr(st.toString());
+          Log.stderr(e.toString());
+          Log.stderr(st.toString());
         }
         table.source = source;
       }
