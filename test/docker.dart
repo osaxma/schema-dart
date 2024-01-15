@@ -16,6 +16,14 @@ class PostgresServer {
   final _containerName = Completer<String>();
 
   Future<int> get port => _port.future;
+  String get host => 'localhost';
+  String get username => _pgUser ?? 'postgres';
+  String get password => _pgPassword ?? 'postgres';
+  String get database => 'postgres';
+
+  // future because the port is not known upon construction
+  Future<String> get connectionString async => 'postgresql://$username:$password@$host:${await port}/$database';
+
   final String? _pgUser;
   final String? _pgPassword;
 
@@ -26,10 +34,10 @@ class PostgresServer {
         _pgPassword = pgPassword;
 
   Future<Endpoint> endpoint() async => Endpoint(
-        host: 'localhost',
-        database: 'postgres',
-        username: _pgUser ?? 'postgres',
-        password: _pgPassword ?? 'postgres',
+        host: host,
+        database: database,
+        username: _pgUser ?? username,
+        password: _pgPassword ?? password,
         port: await port,
       );
 
@@ -142,8 +150,6 @@ Future<void> _startPostgresContainer({
       'ssl_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem',
       'ssl_key_file=/etc/ssl/private/ssl-cert-snakeoil.key',
     ],
-    // pgHbaConfPath: pgHbaConfPath ?? p.join(configPath, 'pg_hba.conf'), 
-    // postgresqlConfPath: p.join(configPath, 'postgresql.conf'),
   );
 
   // Setup the database to support all kind of tests
@@ -176,21 +182,3 @@ Future<bool> _isPostgresContainerRunning(String containerName) async {
   );
   return pr.stdout.toString().split('\n').map((s) => s.trim()).contains(containerName);
 }
-
-/// This is setup is the same as the one from the old travis ci.
-// const oldSchemaInit = <String>[
-//   // create testing database
-//   'create database dart_test;',
-//   // create dart user
-//   'create user dart with createdb;',
-//   "alter user dart with password 'dart';",
-//   'grant all on database dart_test to dart;',
-//   // create darttrust user
-//   'create user darttrust with createdb;',
-//   'grant all on database dart_test to darttrust;',
-// ];
-
-// const replicationSchemaInit = <String>[
-//   // create replication user
-//   "create role replication with replication password 'replication' login;",
-// ];
