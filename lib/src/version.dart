@@ -1,2 +1,2 @@
 // TODO: automate version generation
-const schemaDartVersion = '0.0.2+3';
+const schemaDartVersion = '0.0.3';
