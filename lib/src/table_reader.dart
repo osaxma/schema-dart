@@ -95,6 +95,7 @@ class TablesReader {
   Future<List<Table>> getTables({
     String schemaName = 'public',
     List<String>? tableNames,
+    bool allNullable = false,
   }) async {
     tableNames ??= const <String>[];
     final rawQuery = buildColumnTypesQuery(tableNames: tableNames, schemaName: schemaName);
@@ -120,7 +121,7 @@ class TablesReader {
       Log.trace('   read column: $columnName');
 
       try {
-        final columnData = ColumnData.fromMap(result);
+        final columnData = ColumnData.fromMap(result, allNullable);
         tables.last.columns.add(columnData);
       } catch (e, st) {
         Log.stderr('failed to parse column $columnName');
@@ -133,10 +134,6 @@ class TablesReader {
     }
     return tables;
   }
-
-  // Future<Result> query(String rawQuery) async {
-  //   return (query);
-  // }
 
   Future<void> disconnect() async {
     await _connection.close();

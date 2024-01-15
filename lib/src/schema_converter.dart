@@ -19,6 +19,8 @@ class SchemaConverter {
 
   final bool disableSSL;
 
+  final bool allNullable;
+
   final _tables = <Table>[];
 
   SchemaConverter({
@@ -26,7 +28,8 @@ class SchemaConverter {
     required this.outputDirectory,
     required this.schemaName,
     this.tableNames,
-    this.disableSSL = false
+    this.allNullable = false,
+    this.disableSSL = false,
   });
 
   Future<void> convert() async {
@@ -60,7 +63,7 @@ class SchemaConverter {
     Log.trace('connecting to database');
     await reader.connect();
     Log.trace('calling TablesReader.getTables');
-    final tables = await reader.getTables(schemaName: schemaName, tableNames: tableNames);
+    final tables = await reader.getTables(schemaName: schemaName, tableNames: tableNames, allNullable: allNullable);
     Log.trace('disconnecting the database');
     await reader.disconnect();
     _tables.clear();
@@ -71,6 +74,7 @@ class SchemaConverter {
     final generator = TypesGenerator(
       outputDirectory: outputDirectory,
       tables: _tables,
+      config: TypesGeneratorConfig(),
     );
     await generator.addDartSourceToTables();
   }

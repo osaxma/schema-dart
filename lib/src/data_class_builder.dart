@@ -1,4 +1,4 @@
-import 'package:built_collection/built_collection.dart'; 
+import 'package:built_collection/built_collection.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:schema_dart/src/model.dart';
 
@@ -403,9 +403,10 @@ class _Field {
     }
 
     if (isCollection) {
-      // TODO: account for List<DateTime> since it's a List<String> 
+      // TODO: account for List<DateTime> since it's a List<String>
       //       unlike List<int>, List<double>, etc. which comes in the same type
-      assignment = isNullable ? '$mapKey == null ? null : ${type.replaceAll('?', '')}.from($mapKey)' : '$type.from($mapKey)';
+      assignment =
+          isNullable ? '$mapKey == null ? null : ${type.replaceAll('?', '')}.from($mapKey)' : '$type.from($mapKey)';
     }
 
     return '$arg: $assignment';
