@@ -2,7 +2,7 @@ import 'package:meta/meta.dart';
 import 'package:postgres/postgres.dart';
 
 import 'logger.dart';
-import 'types.dart';
+import 'model.dart';
 
 class TablesReader {
   late final Connection _connection;

@@ -1,6 +1,6 @@
 import 'package:built_collection/built_collection.dart'; 
 import 'package:code_builder/code_builder.dart';
-import 'package:schema_dart/src/types.dart';
+import 'package:schema_dart/src/model.dart';
 
 import 'types_generator.dart';
 
@@ -319,7 +319,7 @@ class _TypeBuilderInput {
 
     for (var column in table.columns) {
       final field = _Field(
-        columnKey: column.columnName,
+        columnKey: column.name,
         name: column.dartName,
         type: column.dartType,
         isNullable: column.isNullable,

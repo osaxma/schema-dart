@@ -20,7 +20,7 @@ class Table {
 /// a simple representation of a column in a [Table]
 class ColumnData {
   final String tableName;
-  final String columnName;
+  final String name;
   final String dataType;
   final bool isNullable;
   final bool isIdentity;
@@ -29,11 +29,11 @@ class ColumnData {
 
   String get dartType => getDartType(dataType, isNullable);
 
-  String get dartName => columnName.convertSnakeCaseToCamelCase();
+  String get dartName => name.convertSnakeCaseToCamelCase();
 
   ColumnData({
     required this.tableName,
-    required this.columnName,
+    required this.name,
     required this.dataType,
     required this.isNullable,
     required this.isIdentity,
@@ -54,7 +54,7 @@ class ColumnData {
 
     return ColumnData(
       tableName: tableName,
-      columnName: columnName,
+      name: columnName,
       dataType: dataType,
       isNullable: isNullable,
       isIdentity: isIdentity,
@@ -65,7 +65,7 @@ class ColumnData {
 
   @override
   String toString() {
-    return 'ColumnData(tableName: $tableName, columnName: $columnName, dataType: $dataType, isNullable: $isNullable)';
+    return 'ColumnData(tableName: $tableName, columnName: $name, dataType: $dataType, isNullable: $isNullable)';
   }
 }
 

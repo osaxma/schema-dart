@@ -5,7 +5,7 @@ import 'package:schema_dart/src/table_reader.dart';
 import 'package:schema_dart/src/types_generator.dart';
 import 'package:path/path.dart' as p;
 
-import 'types.dart';
+import 'model.dart';
 
 class SchemaConverter {
   final String connectionString;
