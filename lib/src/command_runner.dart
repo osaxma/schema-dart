@@ -56,14 +56,14 @@ class SchemaDartRunner extends CommandRunner<void> {
       'nullable-ids',
       abbr: 'i',
       negatable: false,
-      help: 'When provided, identity columns that have identity generations will be generated as nullable fields',
+      help: 'When provided, columns that are identity & have identity generations will be generated as nullable fields',
     );
 
     argParser.addFlag(
       'nullable-defaults',
       abbr: 'd',
       negatable: false,
-      help: 'When provided, identity columns that have identity generations will be generated as nullable fields',
+      help: 'When provided, identity columns that have default values will be generated as nullable fields',
     );
 
     /* end nullable options */

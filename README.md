@@ -76,6 +76,8 @@ Global options:
                            (defaults to all tables)
     --no-ssl               Disable SSL for postgres connection (not recommended)
 -n, --nullable-fields      When provided, all fields in generated class will be nullable (useful for partial table queries and for local table construction update/insert)
+-i, --nullable-ids         When provided, columns that are identity & have identity generations will be generated as nullable fields
+-d, --nullable-defaults    When provided, identity columns that have default values will be generated as nullable fields
 -v, --verbose              Enable verbose logging.
     --version              Print the current version.
 

@@ -1,3 +1,6 @@
+## 0.0.4
+- added `--nullable-defaults` and `--nullable-ids` flags
+
 ## 0.0.3
 - renamed some APIs to be more descriptive 
 - introduced a new flag `--nullable-fields` which will make all fields in generated class nullable
