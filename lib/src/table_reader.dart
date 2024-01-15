@@ -1,5 +1,6 @@
 import 'package:meta/meta.dart';
 import 'package:postgres/postgres.dart';
+import 'package:schema_dart/src/config.dart';
 
 import 'logger.dart';
 import 'model.dart';
@@ -95,7 +96,7 @@ class TablesReader {
   Future<List<Table>> getTables({
     String schemaName = 'public',
     List<String>? tableNames,
-    bool allNullable = false,
+    TypesGeneratorConfig config = const TypesGeneratorConfig(),
   }) async {
     tableNames ??= const <String>[];
     final rawQuery = buildColumnTypesQuery(tableNames: tableNames, schemaName: schemaName);
@@ -121,7 +122,7 @@ class TablesReader {
       Log.trace('   read column: $columnName');
 
       try {
-        final columnData = ColumnData.fromMap(result, allNullable);
+        final columnData = ColumnData.fromMap(result, config);
         tables.last.columns.add(columnData);
       } catch (e, st) {
         Log.stderr('failed to parse column $columnName');

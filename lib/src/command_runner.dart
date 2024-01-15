@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:args/args.dart';
 import 'package:args/command_runner.dart';
 import 'package:schema_dart/src/schema_converter.dart';
@@ -44,7 +42,8 @@ class SchemaDartRunner extends CommandRunner<void> {
       negatable: false,
       help: 'Disable SSL for postgres connection (not recommended)',
     );
-
+    /* start nullable options */
+    /* for the following three flags, see discussion at: https://github.com/osaxma/schema-dart/issues/10 */
     argParser.addFlag(
       'nullable-fields',
       abbr: 'n',
@@ -52,6 +51,22 @@ class SchemaDartRunner extends CommandRunner<void> {
       help: 'When provided, all fields in generated class will be nullable '
           '(useful for partial table queries and for local table construction update/insert)',
     );
+
+    argParser.addFlag(
+      'nullable-ids',
+      abbr: 'i',
+      negatable: false,
+      help: 'When provided, identity columns that have identity generations will be generated as nullable fields',
+    );
+
+    argParser.addFlag(
+      'nullable-defaults',
+      abbr: 'd',
+      negatable: false,
+      help: 'When provided, identity columns that have identity generations will be generated as nullable fields',
+    );
+
+    /* end nullable options */
 
     argParser.addFlag(
       'verbose',
@@ -103,25 +118,7 @@ Examples:
       throw Exception('connection-string is required');
     }
 
-    final disableSSL = topLevelResults['no-ssl'];
-
-    final connectionString = topLevelResults['connection-string'] as String;
-    final outputDirectory = Directory(topLevelResults['output-dir'] as String);
-
-    final schema = topLevelResults['schema'];
-
-    final listOfTables = topLevelResults['tables'];
-
-    final allNullables = topLevelResults['nullable-fields'];
-
-    final converter = SchemaConverter(
-      connectionString: connectionString,
-      outputDirectory: outputDirectory,
-      schemaName: schema,
-      tableNames: listOfTables,
-      disableSSL: disableSSL,
-      allNullable: allNullables,
-    );
+    final converter = SchemaConverter.fromArguments(topLevelResults);
 
     await converter.convert();
   }

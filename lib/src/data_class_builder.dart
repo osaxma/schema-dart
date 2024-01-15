@@ -2,7 +2,7 @@ import 'package:built_collection/built_collection.dart';
 import 'package:code_builder/code_builder.dart';
 import 'package:schema_dart/src/model.dart';
 
-import 'types_generator.dart';
+import 'config.dart';
 
 class DataClassBuilder {
   final Table table;

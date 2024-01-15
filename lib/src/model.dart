@@ -1,3 +1,5 @@
+import 'package:schema_dart/src/config.dart';
+
 import 'util.dart';
 
 /// a simple representation of a table
@@ -31,7 +33,7 @@ class ColumnData {
 
   String get dartName => name.convertSnakeCaseToCamelCase();
 
-  ColumnData({
+  ColumnData._({
     required this.tableName,
     required this.name,
     required this.dataType,
@@ -41,7 +43,7 @@ class ColumnData {
     required this.columnDefault,
   });
 
-  factory ColumnData.fromMap(Map<String, dynamic> map, bool allNullable) {
+  factory ColumnData.fromMap(Map<String, dynamic> map, TypesGeneratorConfig config) {
     final tableName = map[InfoSchemaColumnNames.tableName] as String;
     final columnName = map[InfoSchemaColumnNames.columnName] as String;
     final dataType = map[InfoSchemaColumnNames.dataType] as String;
@@ -51,10 +53,17 @@ class ColumnData {
     final identityGeneration = map[InfoSchemaColumnNames.identityGeneration];
     final columnDefault = map[InfoSchemaColumnNames.columnDefault];
 
-    final isNullable =
-        allNullable ? true : (map[InfoSchemaColumnNames.isNullable].toLowerCase() == 'yes' ? true : false);
+    final bool isNullable;
 
-    return ColumnData(
+    if (config.nullableFields ||
+        (config.nullableIds && isIdentity && identityGeneration != null) ||
+        config.nullableDefaults && columnDefault != null) {
+      isNullable = true;
+    } else {
+      isNullable = (map[InfoSchemaColumnNames.isNullable].toLowerCase() == 'yes' ? true : false);
+    }
+
+    return ColumnData._(
       tableName: tableName,
       name: columnName,
       dataType: dataType,

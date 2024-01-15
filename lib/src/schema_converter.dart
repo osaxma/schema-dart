@@ -1,10 +1,13 @@
 import 'dart:io';
 
+import 'package:args/args.dart';
+import 'package:meta/meta.dart';
 import 'package:schema_dart/src/logger.dart';
 import 'package:schema_dart/src/table_reader.dart';
 import 'package:schema_dart/src/types_generator.dart';
 import 'package:path/path.dart' as p;
 
+import 'config.dart';
 import 'model.dart';
 
 class SchemaConverter {
@@ -19,7 +22,7 @@ class SchemaConverter {
 
   final bool disableSSL;
 
-  final bool allNullable;
+  final TypesGeneratorConfig config;
 
   final _tables = <Table>[];
 
@@ -27,13 +30,49 @@ class SchemaConverter {
     required this.connectionString,
     required this.outputDirectory,
     required this.schemaName,
+    this.config = const TypesGeneratorConfig(),
     this.tableNames,
-    this.allNullable = false,
     this.disableSSL = false,
   });
 
+  factory SchemaConverter.fromArguments(ArgResults args) {
+    final disableSSL = args['no-ssl'];
+
+    final connectionString = args['connection-string'] as String;
+    final outputDirectory = Directory(args['output-dir'] as String);
+
+    final schema = args['schema'];
+
+    final listOfTables = args['tables'];
+
+    final config = TypesGeneratorConfig(
+      nullableFields: args['nullable-fields'],
+      nullableDefaults: args['nullable-defaults'],
+      nullableIds: args['nullable-ids'],
+    );
+
+    return SchemaConverter(
+      connectionString: connectionString,
+      outputDirectory: outputDirectory,
+      schemaName: schema,
+      tableNames: listOfTables,
+      disableSSL: disableSSL,
+      config: config,
+    );
+  }
+
   Future<void> convert() async {
-    // read tables
+    await processTables();
+
+    // write sources to output directory
+    Log.trace('writing files to output directory');
+    var progress = Log.progress('generating dart source code for tables');
+    await _writeFilesToOutputDirectory();
+    progress.finish(message: 'files were written at ${outputDirectory.path}');
+  }
+
+  @visibleForTesting
+  Future<List<Table>> processTables() async {
     Log.trace('started reading tables');
     var progress = Log.progress('reading tables');
 
@@ -50,12 +89,7 @@ class SchemaConverter {
     progress = Log.progress('generating dart source code for tables');
     await _addDartSourceToTables();
     progress.finish(message: 'sources were generated.');
-
-    // write sources to output directory
-    Log.trace('writing files to output directory');
-    progress = Log.progress('generating dart source code for tables');
-    await _writeFilesToOutputDirectory();
-    progress.finish(message: 'files were written at ${outputDirectory.path}');
+    return _tables;
   }
 
   Future<void> _readTables() async {
@@ -63,7 +97,7 @@ class SchemaConverter {
     Log.trace('connecting to database');
     await reader.connect();
     Log.trace('calling TablesReader.getTables');
-    final tables = await reader.getTables(schemaName: schemaName, tableNames: tableNames, allNullable: allNullable);
+    final tables = await reader.getTables(schemaName: schemaName, tableNames: tableNames, config: config);
     Log.trace('disconnecting the database');
     await reader.disconnect();
     _tables.clear();

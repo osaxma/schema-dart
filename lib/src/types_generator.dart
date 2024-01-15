@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:dart_style/dart_style.dart';
 import 'package:schema_dart/src/logger.dart';
 
+import 'config.dart';
 import 'data_class_builder.dart';
 import 'model.dart';
 
@@ -39,28 +40,4 @@ class TypesGenerator {
       }
     }
   }
-}
-
-class TypesGeneratorConfig {
-  final bool generateCopyWith;
-  final bool generateSerialization;
-  final bool generateEquality;
-  final bool generateToString;
-
-  const TypesGeneratorConfig({
-    this.generateCopyWith = true,
-    this.generateSerialization = true,
-    this.generateEquality = true,
-    this.generateToString = true,
-  });
-}
-
-class ClassOnlyConfig extends TypesGeneratorConfig {
-  const ClassOnlyConfig()
-      : super(
-          generateCopyWith: false,
-          generateEquality: false,
-          generateSerialization: false,
-          generateToString: false,
-        );
 }
