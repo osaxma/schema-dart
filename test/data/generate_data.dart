@@ -11,6 +11,8 @@ final serializationTestTableName = 'serialization_output';
 // final _outputFile = '$_tableName.g.dart';
 
 void main() {
+
+  // this is not actually a test but we use a test library that provides `withPostgresServer`
   withPostgresServer('Serialize/Deserialize tests', (server) {
     late final Connection connection;
     // late final String outputFilePath;
@@ -31,22 +33,7 @@ void main() {
 
       // outputFilePath = p.join(targetPath, _outputFile);
     });
-
-
-
-
-    test('deserialize', () {
-
-      
-
-
-    });
-
-
-
   });
-
-
 }
 
 // shamelessly copied from `postgres-dart` decoding tests
@@ -63,42 +50,42 @@ Future<void> generateTableAndRowsForSerializationTest(Connection connection) asy
     ''');
 
   // TODO: re-add point
-  await connection
-      .execute('INSERT INTO public.$serializationTestTableName (i, bi, bl, si, t, f, d, dt, ts, tsz, n, j, ba, u, v, ' /*  p, */
-          'jj, ia, bia, ta, da, ja, va, boola) '
-          'VALUES (-2147483648, -9223372036854775808, TRUE, -32768, '
-          "'string', 10.0, 10.0, '1983-11-06', "
-          "'1983-11-06 06:00:00.000000', '1983-11-06 06:00:00.000000', "
-          "'-1234567890.0987654321', "
-          "'{\"key\":\"value\"}', E'\\\\000', '00000000-0000-0000-0000-000000000000', "
-          "'abcdef', " /* '(0.01, 12.34)', */
-          "'{\"key\": \"value\"}', '{}', '{}', '{}', '{}', '{}', "
-          "'{\"a\", \"b\", \"c\", \"d\", \"e\", \"f\"}', "
-          "'{true, false, false}'"
-          ')');
+  await connection.execute(
+      'INSERT INTO public.$serializationTestTableName (i, bi, bl, si, t, f, d, dt, ts, tsz, n, j, ba, u, v, ' /*  p, */
+      'jj, ia, bia, ta, da, ja, va, boola) '
+      'VALUES (-2147483648, -9223372036854775808, TRUE, -32768, '
+      "'string', 10.0, 10.0, '1983-11-06', "
+      "'1983-11-06 06:00:00.000000', '1983-11-06 06:00:00.000000', "
+      "'-1234567890.0987654321', "
+      "'{\"key\":\"value\"}', E'\\\\000', '00000000-0000-0000-0000-000000000000', "
+      "'abcdef', " /* '(0.01, 12.34)', */
+      "'{\"key\": \"value\"}', '{}', '{}', '{}', '{}', '{}', "
+      "'{\"a\", \"b\", \"c\", \"d\", \"e\", \"f\"}', "
+      "'{true, false, false}'"
+      ')');
 
   // TODO: re-add point
-  await connection
-      .execute('INSERT INTO public.$serializationTestTableName (i, bi, bl, si, t, f, d, dt, ts, tsz, n, j, ba, u, v, ' /*  p, */
-          'jj, ia, bia, ta, da, ja, va, boola) '
-          'VALUES (2147483647, 9223372036854775807, FALSE, 32767, '
-          "'a significantly longer string to the point where i doubt this actually matters', "
-          "10.25, 10.125, '2183-11-06', '2183-11-06 00:00:00.111111', "
-          "'2183-11-06 00:00:00.999999', "
-          "'1000000000000000000000000000.0000000000000000000000000001', "
-          "'[{\"key\":1}]', E'\\\\377', 'FFFFFFFF-ffff-ffff-ffff-ffffffffffff', "
-          "'01234', " /* '(0.2, 100)', */
-          "'{}', '{-123, 999}', '{-123, 999}', '{\"a\", \"lorem ipsum\", \"\"}', "
-          "'{1, 2, 4.5, 1234.5}', '{1, \"\\\"test\\\"\", \"{\\\"a\\\": \\\"b\\\"}\"}', "
-          "'{\"a\", \"b\", \"c\", \"d\", \"e\", \"f\"}', "
-          "'{false, false, true}' "
-          ')');
+  await connection.execute(
+      'INSERT INTO public.$serializationTestTableName (i, bi, bl, si, t, f, d, dt, ts, tsz, n, j, ba, u, v, ' /*  p, */
+      'jj, ia, bia, ta, da, ja, va, boola) '
+      'VALUES (2147483647, 9223372036854775807, FALSE, 32767, '
+      "'a significantly longer string to the point where i doubt this actually matters', "
+      "10.25, 10.125, '2183-11-06', '2183-11-06 00:00:00.111111', "
+      "'2183-11-06 00:00:00.999999', "
+      "'1000000000000000000000000000.0000000000000000000000000001', "
+      "'[{\"key\":1}]', E'\\\\377', 'FFFFFFFF-ffff-ffff-ffff-ffffffffffff', "
+      "'01234', " /* '(0.2, 100)', */
+      "'{}', '{-123, 999}', '{-123, 999}', '{\"a\", \"lorem ipsum\", \"\"}', "
+      "'{1, 2, 4.5, 1234.5}', '{1, \"\\\"test\\\"\", \"{\\\"a\\\": \\\"b\\\"}\"}', "
+      "'{\"a\", \"b\", \"c\", \"d\", \"e\", \"f\"}', "
+      "'{false, false, true}' "
+      ')');
 
   // TODO: re-add point
-  await connection
-      .execute('INSERT INTO public.$serializationTestTableName (i, bi, bl, si, t, f, d, dt, ts, tsz, n, j, ba, u, v, ' /* p, */
-          'jj, ia, bia, ta, da, ja, va, boola) '
-          'VALUES (null, null, null, null, null, null, null, null, null, null, null, null, null, null, '
-          'null, ' /* null, */
-          'null, null, null, null, null, null, null, null)');
+  await connection.execute(
+      'INSERT INTO public.$serializationTestTableName (i, bi, bl, si, t, f, d, dt, ts, tsz, n, j, ba, u, v, ' /* p, */
+      'jj, ia, bia, ta, da, ja, va, boola) '
+      'VALUES (null, null, null, null, null, null, null, null, null, null, null, null, null, null, '
+      'null, ' /* null, */
+      'null, null, null, null, null, null, null, null)');
 }

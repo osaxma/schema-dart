@@ -323,6 +323,7 @@ class _TypeBuilderInput {
         name: column.dartName,
         type: column.dartType,
         isNullable: column.isNullable,
+        useUTC: column.useUtc,
       );
       fields.add(field);
       if (field.isCollection && !hasCollection) {
@@ -352,9 +353,7 @@ class _Field {
     required this.name,
     required this.isNullable,
     required this.type,
-    // TODO: figure out why this was here
-    // ignore: unused_element
-    this.useUTC = true,
+    required this.useUTC,
   }) : typeReference = refer(type);
 
   Reference? get typeRefAsNullable => isNullable ? typeReference : refer(type + '?');
@@ -366,7 +365,10 @@ class _Field {
     final key = columnKey;
     String value = name;
 
-    if (type == 'DateTime') {
+    if (type.replaceAll('?', '') == 'DateTime') {
+      if (isNullable) {
+        value = value + '?';
+      }
       if (useUTC) {
         value = value + '.toUtc()';
       }
@@ -390,12 +392,11 @@ class _Field {
         break;
       case 'int':
         // - int --> map['fieldName']?.toInt()       OR     int.parse(map['fieldName'])
-        assignment = isNullable ? 'int.tryParse($mapKey ?? "")' : 'int.parse($mapKey)';
+        assignment = isNullable ? '$mapKey?.toInt()' : '$mapKey.toInt()';
         break;
       case 'double':
-        // - double --> map['fieldName']?.double()   OR     double.parse(map['fieldName'])
         // note: dart, especially when used with web, would convert double to integer (1.0 -> 1) so account for it.
-        assignment = isNullable ? 'double.tryParse($mapKey ?? "")' : 'double.parse($mapKey)';
+        assignment = isNullable ? '$mapKey?.toDouble()' : '$mapKey.toDouble()';
         break;
       case 'DateTime':
         assignment = isNullable ? 'DateTime.tryParse($mapKey ?? "")' : 'DateTime.parse($mapKey)';

@@ -49,6 +49,7 @@ class SchemaConverter {
       nullableFields: args['nullable-fields'],
       nullableDefaults: args['nullable-defaults'],
       nullableIds: args['nullable-ids'],
+      useUtc: args['use-utc']
     );
 
     return SchemaConverter(

@@ -28,6 +28,7 @@ class ColumnData {
   final bool isIdentity;
   final String? identityGeneration;
   final String? columnDefault;
+  final bool useUtc;
 
   String get dartType => getDartType(dataType, isNullable);
 
@@ -41,6 +42,7 @@ class ColumnData {
     required this.isIdentity,
     required this.identityGeneration,
     required this.columnDefault,
+    required this.useUtc,
   });
 
   factory ColumnData.fromMap(Map<String, dynamic> map, TypesGeneratorConfig config) {
@@ -52,6 +54,7 @@ class ColumnData {
     final isIdentity = map[InfoSchemaColumnNames.isIdentity].toLowerCase() == 'yes' ? true : false;
     final identityGeneration = map[InfoSchemaColumnNames.identityGeneration];
     final columnDefault = map[InfoSchemaColumnNames.columnDefault];
+    final useUtc = config.useUtc;
 
     final bool isNullable;
 
@@ -71,6 +74,7 @@ class ColumnData {
       isIdentity: isIdentity,
       identityGeneration: identityGeneration,
       columnDefault: columnDefault,
+      useUtc: useUtc,
     );
   }
 
