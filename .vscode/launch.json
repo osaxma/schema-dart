@@ -1,0 +1,16 @@
+{
+    "configurations": [
+        {
+            "name": "Dart (test)",
+            "type": "dart",
+            "request": "launch",
+            "templateFor": "test",
+            "customTool": "./test.sh",
+            "toolArgs": [
+                // not working as expected for some reason 
+                // it generates all the `.dart.vm.json` next to the test files instead of the coverage directory
+                // "--coverage=coverage",
+            ],
+        }
+    ]
+}

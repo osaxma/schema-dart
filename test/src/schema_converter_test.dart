@@ -53,8 +53,8 @@ Future<void> _createSampleTables(Connection connection) async {
   await connection.execute(_sampleTables);
 }
 
-final _sampleTableName = 'sample_table1';
-final _sampleTables = 'CREATE TABLE public.sample_table1 ('
+final _sampleTableName = 'schema_converter_test';
+final _sampleTables = 'CREATE TABLE public.$_sampleTableName ('
     'id int, '
     'isSomething boolean, '
     'name text, '

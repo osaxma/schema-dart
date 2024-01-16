@@ -79,11 +79,13 @@ void main() {
 /*                                  test data                                 */
 /* -------------------------------------------------------------------------- */
 
+final _tableName = "read_tables_test";
+
 Future<void> _createSampleTables(Connection connection) async {
   await connection.execute(_sampleTables);
 }
 
-final _sampleTables = 'CREATE TABLE public.sample_table1 '
+final _sampleTables = 'CREATE TABLE public.$_tableName '
     '(i int, s serial, bi bigint, '
     'bs bigserial, bl boolean, si smallint, '
     't text, f real, d double precision, '
@@ -96,7 +98,7 @@ final _sampleTables = 'CREATE TABLE public.sample_table1 '
 // List<(String, String)> _columns = [];
 
 final _expectedResults = /* <columnName, dart type> */ {
-  'sample_table1': {
+  _tableName: {
     'i': 'int', // 'int',
     's': 'int', // 'serial',
     'bi': 'int', // 'bigint',
