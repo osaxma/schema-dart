@@ -93,13 +93,17 @@ String getDartType(String postgresType, bool isNullable) {
     case 'text':
     case 'citext':
     case 'uuid':
-    case 'bytea':
     case 'inet':
     case 'time':
     case 'timetz':
     case 'interval':
     case 'name':
+    // TODO: figure this one out -- postgres-dart returns it as a string for some reason
+    case 'numeric':
       dartType = 'String';
+      break;
+    case 'bytea':
+      dartType = 'List<int>';
       break;
     case 'int2':
     case 'int4':
@@ -112,7 +116,6 @@ String getDartType(String postgresType, bool isNullable) {
       break;
     case 'float4':
     case 'float8':
-    case 'numeric':
     case 'money':
       dartType = 'double';
       break;
@@ -135,7 +138,6 @@ String getDartType(String postgresType, bool isNullable) {
       break;
     case '_float4':
     case '_float8':
-    case '_numeric':
     case '_money':
       dartType = 'List<double>';
       break;
@@ -147,6 +149,8 @@ String getDartType(String postgresType, bool isNullable) {
     case '_citext':
     case '_uuid':
     case '_bytea':
+    // TODO: figure this one out -- postgres-dart returns it as a string for some reason
+    case '_numeric':
       dartType = 'List<String>';
       break;
     case '_json':
