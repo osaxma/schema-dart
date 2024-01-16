@@ -8,15 +8,14 @@ import 'package:path/path.dart' as p;
 import '../docker.dart';
 
 final serializationTestTableName = 'serialization_output';
-// final _outputFile = '$_tableName.g.dart';
+final serializationFileOutputPath = 'test/data/$serializationTestTableName.g.dart';
 
 void main() {
-
   // this is not actually a test but we use a test library that provides `withPostgresServer`
-  withPostgresServer('Serialize/Deserialize tests', (server) {
+  withPostgresServer('Test Files Generation', (server) {
     late final Connection connection;
     // late final String outputFilePath;
-    setUpAll(() async {
+    test('generate files ', () async {
       connection = await server.newConnection(
         sslMode: SslMode.disable,
       );
@@ -31,7 +30,7 @@ void main() {
         schemaName: 'public',
       ).convert();
 
-      // outputFilePath = p.join(targetPath, _outputFile);
+      expect(File(serializationFileOutputPath).existsSync(), true);
     });
   });
 }
