@@ -1,3 +1,9 @@
+## 0.0.5
+- added `--use-utc` flag for serializing DateTime objects as UTC
+- fixed #13 where int/double where assumed to be String in json
+- added serialization/deserialization tests
+- fixed issues with some mapping between dart/psotgres types
+
 ## 0.0.4
 - added `--nullable-defaults` and `--nullable-ids` flags
 
