@@ -1,3 +1,4 @@
+// coverage:ignore-file
 import 'package:cli_util/cli_logging.dart';
 
 // cli_util logger does not have a singelton.

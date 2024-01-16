@@ -6,5 +6,7 @@
 build/
 .vscode/
 
+coverage/
+
 # local dev folder
 local/

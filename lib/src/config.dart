@@ -34,13 +34,3 @@ class TypesGeneratorConfig {
     this.useUtc = false,
   });
 }
-
-class ClassOnlyConfig extends TypesGeneratorConfig {
-  const ClassOnlyConfig()
-      : super(
-          generateCopyWith: false,
-          generateEquality: false,
-          generateSerialization: false,
-          generateToString: false,
-        );
-}
