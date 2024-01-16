@@ -5,4 +5,4 @@ The [sample output](https://github.com/osaxma/schema-dart/tree/main/example/samp
 dart bin/schema_dart.dart -c postgresql://postgres:postgres@localhost:54322/postgres -o example/sample_output -s auth 
 ```
 
-> Note: make sure `supabase start` is running. 
+> Note: make sure `supabase start` is running.
