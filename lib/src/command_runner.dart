@@ -67,6 +67,12 @@ class SchemaDartRunner extends CommandRunner<void> {
     );
 
     /* end nullable options */
+    argParser.addFlag(
+      'use-utc',
+      abbr: 'u',
+      negatable: false,
+      help: 'When provided, `.toUtc` will be added to all generated DateTime fields',
+    );
 
     argParser.addFlag(
       'verbose',

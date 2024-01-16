@@ -20,6 +20,9 @@ class TypesGeneratorConfig {
   /// `false` by default.
   final bool nullableDefaults;
 
+  /// Indicates that all DateTime objects should be treated as UTC.
+  final bool useUtc;
+
   const TypesGeneratorConfig({
     this.generateCopyWith = true,
     this.generateSerialization = true,
@@ -28,6 +31,7 @@ class TypesGeneratorConfig {
     this.nullableFields = false,
     this.nullableIds = false,
     this.nullableDefaults = false,
+    this.useUtc = false,
   });
 }
 
