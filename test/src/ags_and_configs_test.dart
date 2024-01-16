@@ -189,9 +189,9 @@ Future<void> _createSampleTables(Connection connection) async {
   await connection.execute(_sampleTables);
 }
 
-final _sampleTableName = 'sample_table2';
+final _sampleTableName = 'args_and_configs_test';
 final _sampleTables = '''
-CREATE TABLE public.sample_table2(
+CREATE TABLE public.$_sampleTableName(
 someid INT GENERATED ALWAYS AS IDENTITY NOT NULL
 ,somenumber bigint DEFAULT 42
 ,sometext text

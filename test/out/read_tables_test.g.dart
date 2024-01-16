@@ -1,8 +1,8 @@
 import 'package:collection/collection.dart';
 import 'dart:convert';
 
-class SampleTable1 {
-  const SampleTable1({
+class ReadTablesTest {
+  const ReadTablesTest({
     this.bl,
     this.ja,
     this.j,
@@ -28,8 +28,8 @@ class SampleTable1 {
     this.si,
   });
 
-  factory SampleTable1.fromMap(Map<String, dynamic> map) {
-    return SampleTable1(
+  factory ReadTablesTest.fromMap(Map<String, dynamic> map) {
+    return ReadTablesTest(
       bl: map['bl'],
       ja: map['ja'] == null ? null : List<Object>.from(map['ja']),
       j: map['j'],
@@ -56,7 +56,7 @@ class SampleTable1 {
     );
   }
 
-  factory SampleTable1.fromJson(String source) => SampleTable1.fromMap(json.decode(source));
+  factory ReadTablesTest.fromJson(String source) => ReadTablesTest.fromMap(json.decode(source));
 
   final bool? bl;
 
@@ -104,7 +104,7 @@ class SampleTable1 {
 
   final int? si;
 
-  SampleTable1 copyWith({
+  ReadTablesTest copyWith({
     bool? bl,
     List<Object>? ja,
     Object? j,
@@ -129,7 +129,7 @@ class SampleTable1 {
     double? f,
     int? si,
   }) {
-    return SampleTable1(
+    return ReadTablesTest(
       bl: bl ?? this.bl,
       ja: ja ?? this.ja,
       j: j ?? this.j,
@@ -191,7 +191,7 @@ class SampleTable1 {
     if (identical(this, other)) return true;
     final collectionEquals = const DeepCollectionEquality().equals;
 
-    return other is SampleTable1 &&
+    return other is ReadTablesTest &&
         other.bl == bl &&
         collectionEquals(other.ja, ja) &&
         other.j == j &&
@@ -246,6 +246,6 @@ class SampleTable1 {
 
   @override
   String toString() {
-    return 'SampleTable1(bl: $bl, ja: $ja, j: $j, v: $v, ta: $ta, da: $da, s: $s, bia: $bia, dt: $dt, tsz: $tsz, ia: $ia, ts: $ts, i: $i, va: $va, bs: $bs, ba: $ba, jj: $jj, t: $t, d: $d, u: $u, bi: $bi, f: $f, si: $si)';
+    return 'ReadTablesTest(bl: $bl, ja: $ja, j: $j, v: $v, ta: $ta, da: $da, s: $s, bia: $bia, dt: $dt, tsz: $tsz, ia: $ia, ts: $ts, i: $i, va: $va, bs: $bs, ba: $ba, jj: $jj, t: $t, d: $d, u: $u, bi: $bi, f: $f, si: $si)';
   }
 }

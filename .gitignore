@@ -4,7 +4,6 @@
 
 # Conventional directory for build output.
 build/
-.vscode/
 
 coverage/
 
